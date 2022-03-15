@@ -1,5 +1,7 @@
 package uz.pdp.warehouse.entity.organization;
 
+import lombok.Getter;
+import lombok.Setter;
 import uz.pdp.warehouse.entity.base.Auditable;
 
 import javax.persistence.Column;
@@ -8,6 +10,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table
+@Setter
+@Getter
 public class Organization extends Auditable {
 
     @Column(nullable = false, unique = true)
