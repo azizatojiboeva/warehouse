@@ -1,7 +1,7 @@
 package uz.pdp.warehouse.service.base;
 
-import team.concurrency.mealproject.dto.base.BaseGenericDto;
-import team.concurrency.mealproject.dto.base.GenericDto;
+import uz.pdp.warehouse.dto.base.BaseGenericDto;
+import uz.pdp.warehouse.dto.base.GenericDto;
 
 import java.io.Serializable;
 
