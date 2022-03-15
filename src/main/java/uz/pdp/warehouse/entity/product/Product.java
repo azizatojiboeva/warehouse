@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 @Entity
-@Table(name = "product",schema = "product")
+@Table(name = "product", schema = "product")
 public class Product extends Auditable {
 
     private String name;
@@ -37,14 +37,13 @@ public class Product extends Auditable {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @OneToOne(mappedBy = "product")
-    private ProductPlan productPlan;
-
     @ManyToOne
     @JoinColumn(name = "storage_id", nullable = false)
     private Storage storage;
 
-    private LocalDateTime expiryDate;
+    private LocalDate expiryDate;
+
+    private LocalDate producedDate;
 
 //    private JSONPObject attribute;
 

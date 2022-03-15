@@ -7,9 +7,9 @@ import uz.pdp.warehouse.entity.base.Auditable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -18,9 +18,8 @@ public class ProductPlan extends Auditable {
 
     private Long agentId;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product product;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Product> products;
 
     private Integer count;
 

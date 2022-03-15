@@ -22,7 +22,6 @@ public class Storage extends Auditable {
 
     private Double longitude;
 
-    @OneToMany(mappedBy = "storage")
-    private Set<Product> productList;
+
 
 }
