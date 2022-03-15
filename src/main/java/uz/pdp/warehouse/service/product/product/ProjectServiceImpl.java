@@ -1,5 +1,6 @@
 package uz.pdp.warehouse.service.product.product;
 
+import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.dto.product.product.ProductCreateDto;
 import uz.pdp.warehouse.dto.product.product.ProductDto;
 import uz.pdp.warehouse.dto.product.product.ProductUpdateDto;
@@ -9,7 +10,7 @@ import uz.pdp.warehouse.service.base.AbstractService;
 import uz.pdp.warehouse.validator.product.ProductValidator;
 
 import java.util.List;
-
+@Service
 public class ProjectServiceImpl extends AbstractService<ProductRepository, ProductMapper, ProductValidator>
         implements ProductService {
 

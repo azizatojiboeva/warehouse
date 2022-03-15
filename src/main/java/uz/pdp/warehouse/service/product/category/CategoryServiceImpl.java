@@ -1,5 +1,6 @@
 package uz.pdp.warehouse.service.product.category;
 
+import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.dto.product.category.CategoryCreateDto;
 import uz.pdp.warehouse.dto.product.category.CategoryDto;
 import uz.pdp.warehouse.dto.product.category.CategoryUpdateDto;
@@ -10,6 +11,7 @@ import uz.pdp.warehouse.validator.product.CategoryValidator;
 
 import java.util.List;
 
+@Service
 public class CategoryServiceImpl extends AbstractService<CategoryRepository, CategoryMapper, CategoryValidator>
         implements CategoryService {
 
