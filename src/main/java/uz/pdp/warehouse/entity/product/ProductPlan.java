@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.pdp.warehouse.entity.base.Auditable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,8 +15,8 @@ public class ProductPlan extends Auditable {
 
     private Long agentId;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Product> products;
+    @OneToOne
+    private Product products;
 
     private Integer count;
 
