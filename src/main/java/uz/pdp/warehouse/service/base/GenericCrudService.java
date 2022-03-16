@@ -2,6 +2,8 @@ package uz.pdp.warehouse.service.base;
 
 import uz.pdp.warehouse.dto.base.BaseGenericDto;
 import uz.pdp.warehouse.dto.base.GenericDto;
+import uz.pdp.warehouse.response.DataDto;
+import uz.pdp.warehouse.response.ResponseEntity;
 
 import java.io.Serializable;
 
@@ -12,9 +14,9 @@ public interface GenericCrudService<
         K extends Serializable
         > extends GenericService<D, K> {
 
-    K create(CD createDto);
+    ResponseEntity<DataDto<K>> create(CD createDto);
 
-    void delete(K id);
+    ResponseEntity<DataDto<Void>> delete(K id);
 
-    Boolean update(UD updateDto);
+    ResponseEntity<DataDto<Boolean>> update(UD updateDto);
 }

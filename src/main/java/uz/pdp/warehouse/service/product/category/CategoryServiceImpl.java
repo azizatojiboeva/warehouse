@@ -6,6 +6,8 @@ import uz.pdp.warehouse.dto.product.category.CategoryDto;
 import uz.pdp.warehouse.dto.product.category.CategoryUpdateDto;
 import uz.pdp.warehouse.mapper.product.CategoryMapper;
 import uz.pdp.warehouse.repository.product.CategoryRepository;
+import uz.pdp.warehouse.response.DataDto;
+import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.base.AbstractService;
 import uz.pdp.warehouse.validator.product.CategoryValidator;
 
@@ -23,32 +25,33 @@ public class CategoryServiceImpl extends AbstractService<CategoryRepository, Cat
     }
 
     @Override
-    public Long create(CategoryCreateDto createDto) {
+    public ResponseEntity<DataDto<Long>> create(CategoryCreateDto createDto) {
         return null;
     }
 
     @Override
-    public void delete(Long id) {
-
-    }
-
-    @Override
-    public Boolean update(CategoryUpdateDto updateDto) {
+    public ResponseEntity<DataDto<Void>> delete(Long id) {
         return null;
     }
 
     @Override
-    public CategoryDto get(Long id) {
+    public ResponseEntity<DataDto<Boolean>> update(CategoryUpdateDto updateDto) {
+        return null;
+    }
+
+
+    @Override
+    public ResponseEntity<DataDto<CategoryDto>> get(Long id) {
         return null;
     }
 
     @Override
-    public List<CategoryDto> getAll(Long id) {
+    public ResponseEntity<DataDto<List<CategoryDto>>> getAll(Long id) {
         return null;
     }
 
     @Override
-    public List<CategoryDto> getAll() {
+    public ResponseEntity<DataDto<List<CategoryDto>>> getAll() {
         return null;
     }
 }

@@ -18,13 +18,11 @@ public class ProductPlan extends Auditable {
 
     private Long agentId;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product product;
+
+
 
     private Integer count;
 
     private LocalDate period;
 
 }
-

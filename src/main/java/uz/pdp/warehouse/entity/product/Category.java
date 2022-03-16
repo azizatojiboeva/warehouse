@@ -4,21 +4,23 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.pdp.warehouse.entity.base.Auditable;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Setter
 @Getter
-@Table(name = "category",schema = "product")
+@Table(name = "category", schema = "product")
 public class Category extends Auditable {
 
     private String name;
 
     private String code;
 
-    @OneToOne(mappedBy = "product")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category parentCategory;
+
+    @OneToOne(mappedBy = "category")
     private Product product;
 
 

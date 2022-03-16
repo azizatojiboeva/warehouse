@@ -6,6 +6,8 @@ import uz.pdp.warehouse.dto.product.product.ProductDto;
 import uz.pdp.warehouse.dto.product.product.ProductUpdateDto;
 import uz.pdp.warehouse.mapper.product.ProductMapper;
 import uz.pdp.warehouse.repository.product.ProductRepository;
+import uz.pdp.warehouse.response.DataDto;
+import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.base.AbstractService;
 import uz.pdp.warehouse.validator.product.ProductValidator;
 
@@ -20,33 +22,34 @@ public class ProjectServiceImpl extends AbstractService<ProductRepository, Produ
         super(mapper, validator, repository);
     }
 
+
     @Override
-    public Long create(ProductCreateDto createDto) {
+    public ResponseEntity<DataDto<Long>> create(ProductCreateDto createDto) {
         return null;
     }
 
     @Override
-    public void delete(Long id) {
-
-    }
-
-    @Override
-    public Boolean update(ProductUpdateDto updateDto) {
+    public ResponseEntity<DataDto<Void>> delete(Long id) {
         return null;
     }
 
     @Override
-    public ProductDto get(Long id) {
+    public ResponseEntity<DataDto<Boolean>> update(ProductUpdateDto updateDto) {
         return null;
     }
 
     @Override
-    public List<ProductDto> getAll(Long id) {
+    public ResponseEntity<DataDto<ProductDto>> get(Long id) {
         return null;
     }
 
     @Override
-    public List<ProductDto> getAll() {
+    public ResponseEntity<DataDto<List<ProductDto>>> getAll(Long id) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<DataDto<List<ProductDto>>> getAll() {
         return null;
     }
 }
