@@ -4,19 +4,17 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import uz.pdp.warehouse.entity.base.Auditable;
-import uz.pdp.warehouse.entity.storage.Storage;
-
+import java.util.List;
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 @Setter
 @Getter
 @RequiredArgsConstructor
 @Entity
-@Table(name = "product",schema = "product")
+@Table(name = "product", schema = "product")
 public class Product extends Auditable {
 
     private String name;
@@ -33,19 +31,12 @@ public class Product extends Auditable {
 
     private String madeBy;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    private LocalDate expiryDate;
+
+    private LocalDate producedDate;
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category;
-
-    @OneToOne(mappedBy = "product")
-    private ProductPlan productPlan;
-
-    @ManyToOne
-    @JoinColumn(name = "storage_id", nullable = false)
-    private Storage storage;
-
-    private LocalDateTime expiryDate;
-
-//    private JSONPObject attribute;
+    private List<Category> category;
 
 }

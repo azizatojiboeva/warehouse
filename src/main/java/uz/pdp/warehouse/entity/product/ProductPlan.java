@@ -4,12 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.pdp.warehouse.entity.base.Auditable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -18,11 +15,12 @@ public class ProductPlan extends Auditable {
 
     private Long agentId;
 
-
-
+    @OneToOne
+    private Product products;
 
     private Integer count;
 
     private LocalDate period;
 
 }
+

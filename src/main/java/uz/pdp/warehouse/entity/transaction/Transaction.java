@@ -15,9 +15,9 @@ public class Transaction extends Auditable {
 
     private Long marketId;
 
-    private Double totalMoney;
+    private Double totalMoney; // to'lanishi kerak bo'lgan summa
 
-    private Double paidMoney;
+    private Double paidMoney; // to'langan summa
 
     @Enumerated(EnumType.ORDINAL)
     private CashType cashType;
