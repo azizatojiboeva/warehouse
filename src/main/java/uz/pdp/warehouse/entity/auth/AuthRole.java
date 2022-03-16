@@ -22,10 +22,10 @@ public class AuthRole {
 
     private String code;
 
-    @OneToMany
+    @OneToMany(mappedBy = "authRole")
     private Set<AuthPermission> permissions;
 
-    @OneToOne
+    @OneToOne(mappedBy = "role")
     private AuthUser authUser;
 
 

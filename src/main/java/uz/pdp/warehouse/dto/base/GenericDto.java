@@ -1,12 +1,16 @@
 package uz.pdp.warehouse.dto.base;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+//@Builder
 public abstract class GenericDto implements BaseGenericDto {
-    protected String id;
-
+    public Long id;
 }

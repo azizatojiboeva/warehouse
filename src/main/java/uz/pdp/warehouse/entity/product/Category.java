@@ -1,8 +1,11 @@
 package uz.pdp.warehouse.entity.product;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import uz.pdp.warehouse.entity.base.Auditable;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.*;
 
@@ -23,4 +26,12 @@ public class Category extends Auditable {
 //    private List<Product> product;
 
 
+    @Builder(builderMethodName = "childBuilder")
+    public Category(Long id, Long createdBy, Long updatedBy, LocalDateTime createdAt,
+                    LocalDateTime updatedAt, boolean deleted, String name, String code, Category parentCategory) {
+        super(id, createdBy, updatedBy, createdAt, updatedAt, deleted);
+        this.name = name;
+        this.code = code;
+        this.parentCategory = parentCategory;
+    }
 }
