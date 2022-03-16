@@ -13,12 +13,17 @@ public class CategoryValidator extends AbstractValidator<CategoryCreateDto, Cate
     }
 
     @Override
-    public void validOnCreate(CategoryCreateDto categoryCreateDto) throws ValidationException {
+    public void validOnCreate(CategoryCreateDto createDto) throws ValidationException {
 
     }
 
     @Override
-    public void validOnUpdate(CategoryUpdateDto cd) throws ValidationException {
+    public void validOnUpdate(CategoryUpdateDto updateDto) throws ValidationException {
+
+
+
+
+
 
     }
 }

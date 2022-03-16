@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.dto.product.category.CategoryCreateDto;
 import uz.pdp.warehouse.dto.product.category.CategoryDto;
 import uz.pdp.warehouse.dto.product.category.CategoryUpdateDto;
+import uz.pdp.warehouse.entity.product.Category;
 import uz.pdp.warehouse.mapper.product.CategoryMapper;
 import uz.pdp.warehouse.repository.product.CategoryRepository;
 import uz.pdp.warehouse.response.DataDto;
@@ -19,23 +20,30 @@ public class CategoryServiceImpl extends AbstractService<CategoryRepository, Cat
 
 
     private CategoryServiceImpl(CategoryMapper mapper,
-                                  CategoryValidator validator,
-                                  CategoryRepository repository) {
+                                CategoryValidator validator,
+                                CategoryRepository repository) {
         super(mapper, validator, repository);
     }
 
     @Override
     public ResponseEntity<DataDto<Long>> create(CategoryCreateDto createDto) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<DataDto<Void>> delete(Long id) {
-        return null;
+        validator.validOnCreate(createDto);
+        Category category = mapper.fromCreateDto(createDto);
+        Category newCategory = repository.save(category);
+        return new ResponseEntity<>(new DataDto<>(newCategory.getId()));
     }
 
     @Override
     public ResponseEntity<DataDto<Boolean>> update(CategoryUpdateDto updateDto) {
+        validator.validOnUpdate(updateDto);
+        Category category = mapper.fromUpdateDto(updateDto);
+
+//        repository.update(category);
+        return new ResponseEntity<>(new DataDto<>(Boolean.TRUE));
+    }
+
+    @Override
+    public ResponseEntity<DataDto<Void>> delete(Long id) {
         return null;
     }
 

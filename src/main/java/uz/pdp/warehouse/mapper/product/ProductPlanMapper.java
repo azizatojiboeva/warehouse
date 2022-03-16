@@ -14,15 +14,5 @@ import java.util.List;
 @Component
 @Mapper(componentModel = "spring")
 public interface ProductPlanMapper extends AbstractMapper<ProductPlan, ProductPlanDto, ProductPlanCreateDto, ProductPlanUpdateDto> {
-    @Override
-    ProductPlanDto toDto(ProductPlan entity);
 
-    @Override
-    List<ProductPlanDto> toDto(List<ProductPlan> entities);
-
-    @Override
-    ProductPlan fromCreateDto(ProductPlanCreateDto createDto);
-
-    @Override
-    ProductPlan fromUpdateDto(ProductPlanUpdateDto updateDto);
 }

@@ -1,10 +1,20 @@
 package uz.pdp.warehouse.dto.product.category;
 
-import uz.pdp.warehouse.dto.base.BaseGenericDto;
+import lombok.*;
 import uz.pdp.warehouse.dto.base.GenericDto;
 
+@Setter
+@Getter
 public class CategoryDto extends GenericDto {
-    public CategoryDto(String id) {
+
+    public String name;
+
+    public String code;
+
+    @Builder(builderMethodName = "childBuilder")
+    public CategoryDto(String id, String name, String code) {
         super(id);
+        this.name = name;
+        this.code = code;
     }
 }
