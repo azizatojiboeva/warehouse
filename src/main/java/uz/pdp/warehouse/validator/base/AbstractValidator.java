@@ -7,9 +7,9 @@ public abstract class AbstractValidator<CD, UD, K> implements BaseGenericValidat
     public abstract void validateKey(K id) throws
             ValidationException;
 
-    public abstract void validOnCreate(CD cd) throws ValidationException;
+    public abstract void validOnCreate(CD createDto) throws ValidationException;
 
-    public abstract void validOnUpdate(UD cd) throws ValidationException;
+    public abstract void validOnUpdate(UD updateDto) throws ValidationException;
 
 
 }

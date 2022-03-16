@@ -6,4 +6,7 @@ import uz.pdp.warehouse.dto.base.GenericDto;
  * @Author Aziza Tojiboyeva
  */
 public class UserDto extends GenericDto {
+    public UserDto(Long id) {
+        super(id);
+    }
 }

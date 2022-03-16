@@ -12,6 +12,7 @@ import uz.pdp.warehouse.service.product.category.CategoryService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/category/")
 public class CategoryController extends AbstractController<CategoryService> {
 
 

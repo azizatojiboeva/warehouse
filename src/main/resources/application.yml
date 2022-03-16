@@ -1,15 +1,30 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: Aziza@0201
+    url: jdbc:postgresql://localhost:5432/warehouse
     username: postgres
-    url: jdbc:postgresql://localhost:5432/ware_house
+    password: 1309
 
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation : true
+            open-in-view: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  messages:
+    always-use-message-format: true
 
+server:
+  port: 8080
 
 springdoc:
   swagger-ui:
     path: swagger-ui
   api-docs:
     path: /api-docs
-

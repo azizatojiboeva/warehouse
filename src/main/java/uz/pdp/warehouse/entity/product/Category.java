@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Setter
 @Getter
-@Table(name = "category",schema = "product")
+@Table(name = "category")
 public class Category extends Auditable {
 
     private String name;
@@ -33,5 +33,9 @@ public class Category extends Auditable {
         this.name = name;
         this.code = code;
         this.parentCategory = parentCategory;
+    }
+
+    public Category() {
+
     }
 }

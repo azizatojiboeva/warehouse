@@ -11,7 +11,6 @@ import uz.pdp.warehouse.dto.base.GenericDto;
  */
 @Setter
 @Getter
-@AllArgsConstructor
 public class UserUpdateDto extends GenericDto {
     private String fullName;
     private String email;

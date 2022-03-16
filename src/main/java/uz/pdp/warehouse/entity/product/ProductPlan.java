@@ -2,6 +2,7 @@ package uz.pdp.warehouse.entity.product;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.pdp.warehouse.entity.base.Auditable;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@NoArgsConstructor
 public class ProductPlan extends Auditable {
 
     private Long agentId;
@@ -34,5 +36,7 @@ public class ProductPlan extends Auditable {
         this.count = count;
         this.period = period;
     }
+
+
 }
 
