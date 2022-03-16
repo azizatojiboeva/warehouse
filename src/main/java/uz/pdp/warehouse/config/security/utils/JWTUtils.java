@@ -26,7 +26,6 @@ public class JWTUtils {
         return new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(40));
     }
 
-
     public static Algorithm getAlgorithm() {
         return Algorithm.HMAC256(secret.getBytes());
     }

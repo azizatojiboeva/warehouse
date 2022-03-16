@@ -4,3 +4,12 @@ spring:
     password: Aziza@0201
     username: postgres
     url: jdbc:postgresql://localhost:5432/ware_house
+
+
+
+springdoc:
+  swagger-ui:
+    path: swagger-ui
+  api-docs:
+    path: /api-docs
+

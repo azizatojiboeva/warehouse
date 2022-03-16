@@ -30,13 +30,11 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
         return users;
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<DataDto<UserDto>> getUserById(@PathVariable(name = "id") Long id) {
         ResponseEntity<DataDto<UserDto>> entity = service.get(id);
         return entity;
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<DataDto<Boolean>> update(@PathVariable(name = "id") Long id,
@@ -60,14 +58,11 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
         return response;
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<DataDto<Void>> delete(@PathVariable(name = "id") Long id) {
         service.delete(id);
         return new ResponseEntity<>(new DataDto<>(null), HttpStatus.OK);
     }
-
-
 
 
 }
