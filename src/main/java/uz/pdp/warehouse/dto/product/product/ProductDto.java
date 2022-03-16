@@ -8,7 +8,7 @@ import uz.pdp.warehouse.dto.base.GenericDto;
 @Getter
 public class ProductDto extends GenericDto {
     @Builder
-    public ProductDto(String id) {
+    public ProductDto(Long id) {
         super(id);
     }
 }

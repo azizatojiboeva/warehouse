@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Getter
 @RequiredArgsConstructor
 @Entity
-@Table(name = "product", schema = "product")
+@Table(name = "product")
 public class Product extends Auditable {
 
     private String name;

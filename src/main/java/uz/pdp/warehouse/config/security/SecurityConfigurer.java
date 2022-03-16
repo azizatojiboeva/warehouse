@@ -1,8 +1,8 @@
-package uz.pdp.warehouse.config.security;
-
-/**
- * @Author Aziza Tojiboyeva
- */
-public class SecurityConfigurer {
-
-}
+//package uz.pdp.warehouse.config.security;
+//
+///**
+// * @Author Aziza Tojiboyeva
+// */
+//public class SecurityConfigurer {
+//
+//}

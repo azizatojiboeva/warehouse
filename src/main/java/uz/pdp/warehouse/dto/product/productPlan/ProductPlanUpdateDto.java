@@ -9,7 +9,7 @@ import uz.pdp.warehouse.dto.base.GenericDto;
 @Getter
 public class ProductPlanUpdateDto extends GenericDto {
 @Builder
-    public ProductPlanUpdateDto(String id) {
+    public ProductPlanUpdateDto(Long id) {
         super(id);
     }
 }

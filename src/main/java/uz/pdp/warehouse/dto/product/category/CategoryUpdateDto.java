@@ -11,7 +11,7 @@ public class CategoryUpdateDto extends GenericDto {
     public String code;
 
     @Builder(builderMethodName = "childBuilder")
-    public CategoryUpdateDto(String id, String name, String code) {
+    public CategoryUpdateDto(Long id, String name, String code) {
         super(id);
         this.name = name;
         this.code = code;

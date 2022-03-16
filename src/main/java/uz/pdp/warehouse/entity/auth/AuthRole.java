@@ -1,16 +1,16 @@
 package uz.pdp.warehouse.entity.auth;
 
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.Set;
 
-@Setter
 @Getter
-@RequiredArgsConstructor
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "auth_role")
 public class AuthRole {
@@ -22,12 +22,11 @@ public class AuthRole {
 
     private String code;
 
-    @OneToMany(mappedBy = "authRole")
+    @OneToMany(mappedBy = "authRole",fetch = FetchType.LAZY)
     private Set<AuthPermission> permissions;
 
-    @OneToOne(mappedBy = "role")
+    @OneToOne(mappedBy = "role",fetch = FetchType.LAZY)
     private AuthUser authUser;
-
 
 
 }

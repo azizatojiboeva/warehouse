@@ -12,7 +12,7 @@ public class CategoryDto extends GenericDto {
     public String code;
 
     @Builder(builderMethodName = "childBuilder")
-    public CategoryDto(String id, String name, String code) {
+    public CategoryDto(Long id, String name, String code) {
         super(id);
         this.name = name;
         this.code = code;

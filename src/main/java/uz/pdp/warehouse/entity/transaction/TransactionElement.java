@@ -22,6 +22,6 @@ public class TransactionElement extends Auditable {
     private Double totalPrice;
 
     @ManyToOne
-    @JoinColumn(name = "transaction_id")
+    @JoinColumn(name = "transaction_id", nullable = true)
     private Transaction transaction;
 }

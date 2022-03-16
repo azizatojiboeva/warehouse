@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/warehouse?currentSchema=public
+    url: jdbc:postgresql://localhost:5432/warehouse
     username: postgres
     password: 1309
 
@@ -16,7 +16,7 @@ spring:
           lob:
             non_contextual_creation : true
             open-in-view: false
-    database-platform: org.hibernate.dialect.SQLServerDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   messages:
     always-use-message-format: true
 

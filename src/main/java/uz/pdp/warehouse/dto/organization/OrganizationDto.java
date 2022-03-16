@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.pdp.warehouse.dto.base.GenericDto;
 
-import javax.persistence.Column;
-
 @Getter
 @Setter
 public class OrganizationDto extends GenericDto {
@@ -24,8 +22,22 @@ public class OrganizationDto extends GenericDto {
     private String code;
 
     private String email;
-
-    public OrganizationDto(String id) {
+@Builder(builderMethodName = "childBuilder")
+    public OrganizationDto(Long id,
+                                 String name,
+                                 Double latitude,
+                                 Double longitude,
+                                 String website,
+                                 String logo,
+                                 String code,
+                                 String email) {
         super(id);
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.website = website;
+        this.logo = logo;
+        this.code = code;
+        this.email = email;
     }
 }
