@@ -35,4 +35,6 @@ public class Organization extends Auditable {
     private String email;
 
 
+    public Organization() {
+    }
 }

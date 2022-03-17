@@ -61,8 +61,9 @@ public class AuthUserServiceImpl extends
 
     @Override
     public ResponseEntity<DataDto<Long>> create(UserCreateDto createDto) {
-        repository.save(mapper.fromCreateDto(createDto));
-        return new ResponseEntity<>(new DataDto<>());
+
+        AuthUser save = repository.save(mapper.fromCreateDto(createDto));
+        return new ResponseEntity<>(new DataDto<>(save.getId()));
     }
 
     @Override
