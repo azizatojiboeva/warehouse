@@ -35,7 +35,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     public CustomAuthenticationFilter(AuthenticationManager manager) {
         this.authenticationManager = manager;
-        super.setFilterProcessesUrl("/login");
+        super.setFilterProcessesUrl("/api/login");
     }
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {

@@ -1,24 +1,36 @@
 package uz.pdp.warehouse.service.auth;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.pdp.warehouse.dto.auth.PasswordDto;
-import uz.pdp.warehouse.dto.auth.UserCreateDto;
-import uz.pdp.warehouse.dto.auth.UserDto;
-import uz.pdp.warehouse.dto.auth.UserUpdateDto;
+import uz.pdp.warehouse.config.encryption.PasswordEncoderConfigurer;
+import uz.pdp.warehouse.dto.auth.*;
 import uz.pdp.warehouse.entity.auth.AuthUser;
 import uz.pdp.warehouse.exception.UserNotFoundException;
 import uz.pdp.warehouse.mapper.auth.AuthUserMapper;
 import uz.pdp.warehouse.repository.auth.AuthUserRepository;
+import uz.pdp.warehouse.response.AppErrorDto;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.base.AbstractService;
 import uz.pdp.warehouse.validator.auth.AuthUserValidator;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,14 +46,17 @@ public class AuthUserServiceImpl extends
                 AuthUserValidator>
         implements AuthUserService, UserDetailsService {
 
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoderConfigurer passwordEncoder;
+    private final ObjectMapper objectMapper;
 
     protected AuthUserServiceImpl(
             AuthUserMapper mapper,
             AuthUserValidator validator,
-            AuthUserRepository repository, PasswordEncoder passwordEncoder) {
+            AuthUserRepository repository,
+            PasswordEncoderConfigurer passwordEncoder, ObjectMapper objectMapper) {
         super(mapper, validator, repository);
         this.passwordEncoder = passwordEncoder;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -90,13 +105,13 @@ public class AuthUserServiceImpl extends
 
     public ResponseEntity<DataDto<Void>> resetPassword(PasswordDto dto) {
         Optional<AuthUser> user = repository.findById(dto.getId());
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new UserNotFoundException("User not found");
         }
-        if(!dto.getOldPass().equalsIgnoreCase(dto.getNewPassword())){
+        if (!dto.getOldPass().equalsIgnoreCase(dto.getNewPassword())) {
             throw new RuntimeException("Password doesn't match.");
         }
-        repository.resetPassword(passwordEncoder.encode(dto.getNewPassword()),dto.getId() );
+        repository.resetPassword(passwordEncoder.passwordEncoder().encode(dto.getNewPassword()), dto.getId());
         return new ResponseEntity<>(new DataDto<>(null));
     }
 
@@ -106,7 +121,45 @@ public class AuthUserServiceImpl extends
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
+                .credentialsExpired(false)
+                .accountExpired(false)
+                .accountLocked(false)
+                .disabled(false)
                 .authorities(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
                 .build();
+    }
+
+    public ResponseEntity<DataDto<SessionDto>> getToken(LoginDto dto) {
+        try {
+
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost httppost = new HttpPost("http://localhost:8080 "+"/api/login");
+            byte[] bytes = objectMapper.writeValueAsBytes(dto);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+            httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+            httppost.setEntity(new InputStreamEntity(byteArrayInputStream));
+
+            HttpResponse response = client.execute(httppost);
+
+            JsonNode json_auth = objectMapper.readTree(EntityUtils.toString(response.getEntity()));
+
+            if (json_auth.has("success") && json_auth.get("success").asBoolean()) {
+                JsonNode node = json_auth.get("data");
+                SessionDto sessionDto = objectMapper.readValue(node.toString(), SessionDto.class);
+                return new ResponseEntity<>(new DataDto<>(sessionDto), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(new DataDto<>(objectMapper.readValue(json_auth.get("error").toString(),
+                    AppErrorDto.class)), HttpStatus.OK);
+
+        } catch (IOException e) {
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
+                    .message(e.getLocalizedMessage())
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build()), HttpStatus.OK);
+        }
+    }
+
+    public ResponseEntity<DataDto<SessionDto>> refreshToken(HttpServletRequest request, HttpServletResponse response){
+        return null;
     }
 }

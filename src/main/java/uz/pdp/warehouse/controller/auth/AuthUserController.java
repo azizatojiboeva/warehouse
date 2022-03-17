@@ -3,10 +3,7 @@ package uz.pdp.warehouse.controller.auth;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.warehouse.controller.base.AbstractController;
-import uz.pdp.warehouse.dto.auth.PasswordDto;
-import uz.pdp.warehouse.dto.auth.UserCreateDto;
-import uz.pdp.warehouse.dto.auth.UserDto;
-import uz.pdp.warehouse.dto.auth.UserUpdateDto;
+import uz.pdp.warehouse.dto.auth.*;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.auth.AuthUserServiceImpl;
@@ -63,6 +60,12 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
         service.delete(id);
         return new ResponseEntity<>(new DataDto<>(null), HttpStatus.OK);
     }
+
+
+
+
+
+
 
 
 }

@@ -32,11 +32,12 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        http.cors().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers("/login**", "/token/refresh/**", "/swagger-ui/**")
-                .permitAll();
-        http.authorizeRequests().anyRequest().authenticated();
+                .antMatchers("/api/login/**", "/token/refresh/**", "/swagger-ui/**", "/api-docs/**")
+                .permitAll()
+        .anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
