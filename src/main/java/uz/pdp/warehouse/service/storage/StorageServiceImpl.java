@@ -1,5 +1,6 @@
 package uz.pdp.warehouse.service.storage;
 
+import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.dto.storage.StorageCreateDto;
 import uz.pdp.warehouse.dto.storage.StorageDto;
 import uz.pdp.warehouse.dto.storage.StorageUpdateDto;
@@ -12,6 +13,7 @@ import uz.pdp.warehouse.validator.storage.StorageValidator;
 
 import java.util.List;
 
+@Service
 public class StorageServiceImpl extends AbstractService<StorageRepository, StorageMapper, StorageValidator> implements StorageService {
 
     protected StorageServiceImpl(StorageMapper mapper, StorageValidator validator, StorageRepository repository) {
