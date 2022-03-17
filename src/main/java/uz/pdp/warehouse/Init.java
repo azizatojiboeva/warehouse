@@ -27,9 +27,9 @@ public class Init implements CommandLineRunner {
     public void run(String... args) throws Exception {
         AuthRole admin = roleRepository.findByCode("ADMIN");
         AuthUser authUser =new AuthUser();
-        authUser.setFullName("Aziza Tojiboyeva");
-        authUser.setEmail("azizatojiboyeva24@gmail.com");
-        authUser.setPhoneNumber("+998991234567");
+        authUser.setFullName("Nodirbek Juraev");
+        authUser.setEmail("nodirbekjuraev02@gmail.com");
+        authUser.setPhoneNumber("+998995134134");
         authUser.setRole(admin);
         authUser.setPassword(passwordEncoderConfigurer.passwordEncoder().encode("123"));
         repository.save(authUser);

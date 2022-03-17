@@ -46,7 +46,7 @@ public class CategoryServiceImpl extends AbstractService<CategoryRepository, Cat
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
         validator.validateKey(id);
-        repository.deleteSoft(id, UUID.randomUUID());
+        repository.deleteSoft(id);
         return null;
     }
 

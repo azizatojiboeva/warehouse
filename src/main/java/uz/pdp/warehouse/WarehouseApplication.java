@@ -14,13 +14,13 @@ import uz.pdp.warehouse.properties.OpenApiProperties;
 @EnableScheduling
 public class WarehouseApplication {
 
-/*
-    private final Init init;
 
-    public WarehouseApplication(Init init) {
-        this.init = init;
-    }
-*/
+//    private final Init init;
+//
+//    public WarehouseApplication(Init init) {
+//        this.init = init;
+//    }
+
 
 
     public static void main(String[] args) throws Exception {
