@@ -2,6 +2,7 @@ package uz.pdp.warehouse.service.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.xml.bind.v2.TODO;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -16,9 +17,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.config.encryption.PasswordEncoderConfigurer;
 import uz.pdp.warehouse.dto.auth.*;
+import uz.pdp.warehouse.entity.auth.AuthRole;
 import uz.pdp.warehouse.entity.auth.AuthUser;
 import uz.pdp.warehouse.exception.UserNotFoundException;
 import uz.pdp.warehouse.mapper.auth.AuthUserMapper;
+import uz.pdp.warehouse.repository.auth.AuthRoleRepository;
 import uz.pdp.warehouse.repository.auth.AuthUserRepository;
 import uz.pdp.warehouse.response.AppErrorDto;
 import uz.pdp.warehouse.response.DataDto;
@@ -32,6 +35,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -46,33 +50,52 @@ public class AuthUserServiceImpl extends
         implements AuthUserService, UserDetailsService {
 
     private final PasswordEncoderConfigurer passwordEncoder;
+    private final AuthRoleRepository authRoleRepository;
     private final ObjectMapper objectMapper;
 
     protected AuthUserServiceImpl(
             AuthUserMapper mapper,
             AuthUserValidator validator,
             AuthUserRepository repository,
-            PasswordEncoderConfigurer passwordEncoder, ObjectMapper objectMapper) {
+            PasswordEncoderConfigurer passwordEncoder, AuthRoleRepository authRoleRepository, ObjectMapper objectMapper) {
         super(mapper, validator, repository);
         this.passwordEncoder = passwordEncoder;
+        this.authRoleRepository = authRoleRepository;
         this.objectMapper = objectMapper;
     }
 
     @Override
     public ResponseEntity<DataDto<Long>> create(UserCreateDto createDto) {
-        repository.save(mapper.fromCreateDto(createDto));
-        return new ResponseEntity<>(new DataDto<>());
+        // TODO: 3/18/2022 there should be validation, checks if this user already exist in database, have all required fields
+
+        AuthRole user = authRoleRepository.findByCode("USER");
+        AuthUser authUser = mapper.fromCreateDto(createDto);
+        authUser.setPassword(passwordEncoder.passwordEncoder().encode(createDto.getPassword()));
+        authUser.setRole(user);
+        repository.save(authUser);
+        return new ResponseEntity<>(new DataDto<>(authUser.getId()));
     }
 
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
+        Optional<AuthUser> user = repository.findById(id);
+        if(user.isEmpty()){
+            return new ResponseEntity<>(new DataDto<>(new AppErrorDto(HttpStatus.NOT_FOUND, "user not found")));
+        }
         repository.softDelete(id);
         return new ResponseEntity<>(new DataDto<>(null));
     }
 
     @Override
     public ResponseEntity<DataDto<Boolean>> update(UserUpdateDto updateDto) {
-        AuthUser authUser = mapper.fromUpdateDto(updateDto);
+        Optional<AuthUser> user = repository.findById(updateDto.getId());
+        if(user.isEmpty()){
+            return new ResponseEntity<>(new DataDto<>(new AppErrorDto(HttpStatus.NOT_FOUND, "user not found")));
+        }
+        AuthUser authUser = user.get();
+        authUser.setPhoneNumber(updateDto.getPhoneNumber());
+        authUser.setEmail(updateDto.getEmail());
+        authUser.setFullName(updateDto.getFullName());
         repository.save(authUser);
         return new ResponseEntity<>(new DataDto<>(true));
     }
@@ -82,7 +105,9 @@ public class AuthUserServiceImpl extends
         AuthUser authUser = repository.findById(id).orElseThrow(() -> {
             throw new UserNotFoundException("User not found");
         });
-        return new ResponseEntity<>(new DataDto<>(mapper.toDto(authUser)));
+        UserDto userDto = mapper.toDto(authUser);
+        userDto.setAuthRole(authUser.getRole());
+        return new ResponseEntity<>(new DataDto<>(userDto));
     }
 
     @Override
@@ -96,7 +121,9 @@ public class AuthUserServiceImpl extends
         List<AuthUser> authUsers = repository.findAll();
         for (AuthUser authUser : authUsers) {
             if (!authUser.isDeleted()) {
-                userDtos.add(mapper.toDto(authUser));
+                UserDto userDto = mapper.toDto(authUser);
+                userDto.setAuthRole(authUser.getRole());
+                userDtos.add(userDto);
             }
         }
         return new ResponseEntity<>(new DataDto<>(userDtos));
