@@ -7,6 +7,14 @@ import uz.pdp.warehouse.response.ResponseEntity;
 
 import java.io.Serializable;
 
+/**
+ *
+ * @param <D> dto
+ * @param <CD> createDto
+ * @param <UD> updateDot
+ * @param <K> subject id
+ */
+
 public interface GenericCrudService<
         D extends GenericDto,
         CD extends BaseGenericDto,

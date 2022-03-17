@@ -35,7 +35,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.cors().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers("/api/login/**", "/token/refresh/**", "/swagger-ui/**", "/api-docs/**")
+                .antMatchers("/api/login/**",
+                        "/token",
+                        "/swagger-ui/**",
+                        "/api-docs/**")
                 .permitAll()
         .anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.dto.organization.OrganizationCreateDto;
 import uz.pdp.warehouse.dto.organization.OrganizationDto;
 import uz.pdp.warehouse.dto.organization.OrganizationUpdateDto;
+import uz.pdp.warehouse.entity.organization.Organization;
 import uz.pdp.warehouse.mapper.organization.OrganizationMapper;
 import uz.pdp.warehouse.repository.organization.OrganizationRepository;
 import uz.pdp.warehouse.response.DataDto;
@@ -12,6 +13,7 @@ import uz.pdp.warehouse.service.base.AbstractService;
 import uz.pdp.warehouse.validator.organization.OrganizationValidator;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrganizationServiceImpl extends AbstractService<OrganizationRepository, OrganizationMapper, OrganizationValidator>
@@ -25,22 +27,34 @@ public class OrganizationServiceImpl extends AbstractService<OrganizationReposit
 
     @Override
     public ResponseEntity<DataDto<Long>> create(OrganizationCreateDto createDto) {
-        return null;
+        validator.validOnCreate(createDto);
+        Organization organization = mapper.fromCreateDto(createDto);
+        Organization newOrganization = repository.save(organization);
+        return new ResponseEntity<>(new DataDto<>(newOrganization.getId()));
     }
 
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
+        validator.validateKey(id);
+        UUID uuid = UUID.randomUUID();
+        repository.softDelete(id, uuid);
         return null;
     }
 
     @Override
     public ResponseEntity<DataDto<Boolean>> update(OrganizationUpdateDto updateDto) {
-        return null;
+        validator.validOnUpdate(updateDto);
+        Organization organization = mapper.fromUpdateDto(updateDto);
+        repository.save(organization);
+        return new ResponseEntity<>(new DataDto<>(Boolean.TRUE));
     }
 
     @Override
     public ResponseEntity<DataDto<OrganizationDto>> get(Long id) {
-        return null;
+        validator.validateKey(id);
+        Organization organization = repository.getByIdAndNotDeleted(id);
+        OrganizationDto organizationDto = mapper.toDto(organization);
+        return new ResponseEntity<>(new DataDto<>(organizationDto));
     }
 
     @Override
@@ -50,6 +64,8 @@ public class OrganizationServiceImpl extends AbstractService<OrganizationReposit
 
     @Override
     public ResponseEntity<DataDto<List<OrganizationDto>>> getAll() {
-        return null;
+        List<Organization> organizations = repository.getAllAndNotDeleted();
+        List<OrganizationDto> organizationDtos = mapper.toDto(organizations);
+        return new ResponseEntity<>(new DataDto<>(organizationDtos, (long) organizations.size()));
     }
 }

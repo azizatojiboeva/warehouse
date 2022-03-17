@@ -25,7 +25,7 @@ public class HomeController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/token", method = RequestMethod.GET)
+    @RequestMapping(value = "/token", method = RequestMethod.POST)
     public ResponseEntity<DataDto<SessionDto>> getToken(@RequestBody LoginDto dto) {
         ResponseEntity<DataDto<SessionDto>> token = service.getToken(dto);
         return token;

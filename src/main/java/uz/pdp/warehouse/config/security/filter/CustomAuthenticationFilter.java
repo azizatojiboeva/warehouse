@@ -15,12 +15,16 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import uz.pdp.warehouse.config.security.utils.JWTUtils;
 import uz.pdp.warehouse.dto.auth.LoginDto;
+import uz.pdp.warehouse.dto.auth.SessionDto;
+import uz.pdp.warehouse.response.AppErrorDto;
+import uz.pdp.warehouse.response.DataDto;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +41,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         this.authenticationManager = manager;
         super.setFilterProcessesUrl("/api/login");
     }
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
@@ -54,39 +59,49 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException, IOException {
         User user = (User) authentication.getPrincipal();
+        Date expiryForAccessToken = JWTUtils.getExpiry();
+        Date expiryForRefreshToken = JWTUtils.getExpiryForRefreshToken();
 
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(JWTUtils.getExpiry())
+                .withExpiresAt(expiryForAccessToken)
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("roles",
+                        user.
+                                getAuthorities().
+                                stream().
+                                map(GrantedAuthority::getAuthority).
+                                collect(Collectors.toList()))
                 .sign(JWTUtils.getAlgorithm());
 
         String refreshToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(JWTUtils.getExpiryForRefreshToken())
+                .withExpiresAt(expiryForRefreshToken)
                 .withIssuer(request.getRequestURL().toString())
                 .sign(JWTUtils.getAlgorithm());
 
-        Map<String, String> tokens = new HashMap<>();
-
-        tokens.put("access_token", accessToken);
-        tokens.put("refresh_token", refreshToken);
+        SessionDto sessionDto = SessionDto.builder()
+                .accessToken(accessToken)
+                .accessTokenExpiry(expiryForAccessToken.getTime())
+                .refreshToken(refreshToken)
+                .refreshTokenExpiry(expiryForRefreshToken.getTime())
+                .issuedAt(System.currentTimeMillis())
+                .build();
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+        new ObjectMapper().writeValue(response.getOutputStream(), new DataDto<>(sessionDto));
     }
 
     @Override
-    protected void unsuccessfulAuthentication(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException failed)
-            throws IOException, ServletException {
-        response.setStatus(HttpStatus.NOT_FOUND.value());
-        new ObjectMapper().writeValue(response.getOutputStream(), "User not found");
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        DataDto<AppErrorDto> resp = new DataDto<>(
+                AppErrorDto.builder()
+                        .message(failed.getMessage())
+                        .path(request.getRequestURL().toString())
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .build()
+        );
+        new ObjectMapper().writeValue(response.getOutputStream(), resp);
     }
-
-
 
 }

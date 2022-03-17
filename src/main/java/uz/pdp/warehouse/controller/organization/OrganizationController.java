@@ -10,6 +10,7 @@ import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.organization.OrganizationService;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/organization/")
 public class OrganizationController extends AbstractController<OrganizationService> {
@@ -21,7 +22,6 @@ public class OrganizationController extends AbstractController<OrganizationServi
     public ResponseEntity<DataDto<Long>> create(@RequestBody OrganizationCreateDto organizationCreateDto) {
         return service.create(organizationCreateDto);
     }
-
 
     @RequestMapping(value = "update", method = RequestMethod.PUT)
     public ResponseEntity<DataDto<Boolean>> update(@RequestBody OrganizationUpdateDto organizationUpdateDto) {
