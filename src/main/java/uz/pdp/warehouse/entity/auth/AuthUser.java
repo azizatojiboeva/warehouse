@@ -23,7 +23,7 @@ public class AuthUser extends Auditable {
 
     private String phoneNumber;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private AuthRole role;
 

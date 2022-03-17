@@ -31,5 +31,10 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<AppError> handleUserNotFound(ValidationException e, WebRequest webRequest) {
+        return new ResponseEntity<>(new AppError(e.getMessage(), webRequest, HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
+    }
+
 
 }

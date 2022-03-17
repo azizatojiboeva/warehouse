@@ -3,10 +3,7 @@ package uz.pdp.warehouse.controller.auth;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.warehouse.controller.base.AbstractController;
-import uz.pdp.warehouse.dto.auth.PasswordDto;
-import uz.pdp.warehouse.dto.auth.UserCreateDto;
-import uz.pdp.warehouse.dto.auth.UserDto;
-import uz.pdp.warehouse.dto.auth.UserUpdateDto;
+import uz.pdp.warehouse.dto.auth.*;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.auth.AuthUserServiceImpl;
@@ -30,13 +27,11 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
         return users;
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<DataDto<UserDto>> getUserById(@PathVariable(name = "id") Long id) {
         ResponseEntity<DataDto<UserDto>> entity = service.get(id);
         return entity;
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<DataDto<Boolean>> update(@PathVariable(name = "id") Long id,
@@ -60,12 +55,15 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
         return response;
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<DataDto<Void>> delete(@PathVariable(name = "id") Long id) {
         service.delete(id);
         return new ResponseEntity<>(new DataDto<>(null), HttpStatus.OK);
     }
+
+
+
+
 
 
 
