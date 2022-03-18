@@ -1,20 +1,35 @@
 package uz.pdp.warehouse.dto.auth;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import uz.pdp.warehouse.dto.base.GenericDto;
+import uz.pdp.warehouse.entity.auth.AuthRole;
+
+import java.util.List;
 
 /**
  * @Author Aziza Tojiboyeva
  */
+@Setter
+@Getter
 public class UserDto extends GenericDto {
-    public String fullName;
+    private String fullName;
 
-    public String password;
+    private String password;
 
-    public String email;
+    private String email;
 
-    public String phoneNumber;
+    private String phoneNumber;
 
-    public UserDto(Long id) {
+    private AuthRole authRole;
+
+    public UserDto(Long id, String fullName, String password, String email, String phoneNumber, AuthRole authRole) {
         super(id);
+        this.fullName = fullName;
+        this.password = password;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.authRole = authRole;
     }
 }

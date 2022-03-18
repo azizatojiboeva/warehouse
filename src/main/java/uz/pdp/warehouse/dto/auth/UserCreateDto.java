@@ -5,12 +5,16 @@ import uz.pdp.warehouse.dto.base.BaseGenericDto;
 /**
  * @Author Aziza Tojiboyeva
  */
-public class UserCreateDto implements BaseGenericDto {
-    public String fullName;
+@Setter
+@Getter
+@AllArgsConstructor
+public class   UserCreateDto implements BaseGenericDto {
+    private String fullName;
 
-    public String password;
+    private String password;
 
-    public String email;
+    private String email;
 
-    public String phoneNumber;
+    private String phoneNumber;
+
 }

@@ -51,8 +51,7 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
 
     @PostMapping("")
     public ResponseEntity<DataDto<Long>> create(@RequestBody UserCreateDto createDto) {
-        ResponseEntity<DataDto<Long>> response = service.create(createDto);
-        return response;
+        return service.create(createDto);
     }
 
     @DeleteMapping("/{id}")

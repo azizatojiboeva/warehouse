@@ -1,7 +1,9 @@
 package uz.pdp.warehouse.entity.auth;
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -19,10 +21,5 @@ public class AuthPermission {
     private String name;
 
     private String code;
-
-    @ManyToOne
-    @JoinColumn(name = "auth_role_id", nullable = false)
-    private AuthRole authRole;
-
 
 }

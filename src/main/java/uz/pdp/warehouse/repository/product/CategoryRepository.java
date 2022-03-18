@@ -12,7 +12,7 @@ import java.util.List;
 public interface CategoryRepository extends AbstractRepository<Category, Long> {
     @Modifying
     @Transactional
-    @Query(value = "update public.category set is_deleted = true where id = :id ", nativeQuery = true)
+    @Query(value = "update category set is_deleted = true where id = :id ", nativeQuery = true)
     void deleteSoft(@Param("id") Long id);
 
     @Query(value = "select * from public.category where not is_deleted and id = :id ", nativeQuery = true)

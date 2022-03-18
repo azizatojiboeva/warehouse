@@ -22,11 +22,9 @@ public class AuthRole {
 
     private String code;
 
-    @OneToMany(mappedBy = "authRole",fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<AuthPermission> permissions;
 
-    @OneToOne(mappedBy = "role",fetch = FetchType.LAZY)
-    private AuthUser authUser;
 
 
 }

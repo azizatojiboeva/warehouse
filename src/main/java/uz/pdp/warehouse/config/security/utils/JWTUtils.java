@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
  *
  *JWT utils class that provides functionality for JWT token based authority
  */
+
+
 public class JWTUtils {
     public static Integer expiry = 1800000000;
     public static String secret = "SDSRTED34JNBNJ@@*&p45kbNBKRIIHB@456#$%&f%&t#sxyASX345";
