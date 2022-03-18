@@ -1,15 +1,16 @@
-package uz.pdp.warehouse.dto.district;
+package uz.pdp.warehouse.dto.market;
 
 import lombok.Getter;
 import lombok.Setter;
 import uz.pdp.warehouse.dto.base.BaseGenericDto;
 
 /**
- * @author Axmadjonov Eliboy, Thu 2:11 PM,3/17/2022
+ * @author Axmadjonov Eliboy, Fri 12:05 AM,3/18/2022
  */
+
 @Getter
 @Setter
-public class DistrictCreateDto implements BaseGenericDto {
+public class MarketCreateDto implements BaseGenericDto {
 
     private String name;
 
@@ -17,5 +18,8 @@ public class DistrictCreateDto implements BaseGenericDto {
 
     private Double longitude;
 
-    private Long agentId;
+    private Double credit;
+
+    private Long district_id;
+
 }

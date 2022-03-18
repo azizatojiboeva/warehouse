@@ -13,6 +13,7 @@ import uz.pdp.warehouse.service.base.AbstractService;
 import uz.pdp.warehouse.validator.district.DistrictValidator;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Axmadjonov Eliboy, Thu 2:07 PM,3/17/2022
@@ -35,17 +36,26 @@ public class DistrictServiceImpl extends AbstractService<DistrictRepository, Dis
 
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
+        validator.validateKey(id);
+        UUID uuid=  UUID.randomUUID();
+        repository.deleteSoft(id, uuid.toString());
         return null;
     }
 
     @Override
     public ResponseEntity<DataDto<Boolean>> update(DistrictUpdateDto updateDto) {
-        return null;
+        validator.validOnUpdate(updateDto);
+        District district = mapper.fromUpdateDto(updateDto);
+        repository.save(district);
+        return new ResponseEntity<>(new DataDto<>(Boolean.TRUE));
     }
 
     @Override
     public ResponseEntity<DataDto<DistrictDto>> get(Long id) {
-        return null;
+        validator.validateKey(id);
+        District district = repository.getByIdAndNotDelete(id);
+        DistrictDto districtDto = mapper.toDto(district);
+        return new ResponseEntity<>(new DataDto<>(districtDto));
     }
 
     @Override
@@ -55,6 +65,8 @@ public class DistrictServiceImpl extends AbstractService<DistrictRepository, Dis
 
     @Override
     public ResponseEntity<DataDto<List<DistrictDto>>> getAll() {
-        return null;
+        List<District> districts = repository.findAllAndNotIsDelete();
+        List<DistrictDto> districtDtos = mapper.toDto(districts);
+        return new ResponseEntity<>(new DataDto<>(districtDtos));
     }
 }

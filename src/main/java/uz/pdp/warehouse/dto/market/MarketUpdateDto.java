@@ -1,4 +1,4 @@
-package uz.pdp.warehouse.dto.district;
+package uz.pdp.warehouse.dto.market;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,12 +6,12 @@ import lombok.Setter;
 import uz.pdp.warehouse.dto.base.GenericDto;
 
 /**
- * @author Axmadjonov Eliboy, Thu 2:09 PM,3/17/2022
+ * @author Axmadjonov Eliboy, Fri 12:05 AM,3/18/2022
  */
-
 @Getter
 @Setter
-public class DistrictDto extends GenericDto {
+public class MarketUpdateDto extends GenericDto {
+
 
     private String name;
 
@@ -19,10 +19,10 @@ public class DistrictDto extends GenericDto {
 
     private Double longitude;
 
-    private Long agentId;
+    private Double credit;
 
     @Builder(builderMethodName = "childBuilder")
-    public DistrictDto(Long id) {
+    public MarketUpdateDto(Long id) {
         super(id);
     }
 }

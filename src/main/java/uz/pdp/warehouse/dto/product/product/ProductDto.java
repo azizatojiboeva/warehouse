@@ -5,10 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.pdp.warehouse.dto.base.GenericDto;
 import uz.pdp.warehouse.dto.product.category.CategoryDto;
-import uz.pdp.warehouse.entity.product.Category;
 
-import java.util.List;
 import java.time.LocalDate;
+import java.util.List;
 
 @Setter
 @Getter

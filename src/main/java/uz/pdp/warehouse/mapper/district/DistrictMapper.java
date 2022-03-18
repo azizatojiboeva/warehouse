@@ -17,22 +17,13 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface DistrictMapper extends AbstractMapper<District, DistrictDto, DistrictCreateDto, DistrictUpdateDto> {
     @Override
-    default DistrictDto toDto(District entity) {
-        return null;
-    }
+    DistrictDto toDto(District entity) ;
 
     @Override
-    default List<DistrictDto> toDto(List<District> entities) {
-        return null;
-    }
+     List<DistrictDto> toDto(List<District> entities) ;
+    @Override
+    District fromCreateDto(DistrictCreateDto createDto) ;
 
     @Override
-    default District fromCreateDto(DistrictCreateDto createDto) {
-        return null;
-    }
-
-    @Override
-    default District fromUpdateDto(DistrictUpdateDto updateDto) {
-        return null;
-    }
+     District fromUpdateDto(DistrictUpdateDto updateDto) ;
 }

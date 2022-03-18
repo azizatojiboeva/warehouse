@@ -1,5 +1,6 @@
 package uz.pdp.warehouse.service.storage;
 
+import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.dto.storage.StorageCreateDto;
 import uz.pdp.warehouse.dto.storage.StorageDto;
 import uz.pdp.warehouse.dto.storage.StorageUpdateDto;
