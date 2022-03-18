@@ -15,12 +15,13 @@ import javax.transaction.Transactional;
 @Repository
 public interface AuthUserRepository extends AbstractRepository<AuthUser, Long> {
 
-
+    @Transactional
     @Modifying
     @Query("update AuthUser a set a.deleted = true where a.id =:id")
     void softDelete(@Param("id") Long id);
 
 
+    @Transactional
     @Modifying
     @Query("update AuthUser a set a.password =:newPassword where a.id =:id")
     void resetPassword( @Param("newPassword")String newPassword,@Param("id") Long id);
