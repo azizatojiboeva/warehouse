@@ -22,14 +22,14 @@ public class CategoryController extends AbstractController<CategoryService> {
 
 
     @PostMapping(value = "create")
-    public ResponseEntity<DataDto<Long>> create(@RequestBody CategoryCreateDto CategoryCreateDto) {
-        return service.create(CategoryCreateDto);
+    public ResponseEntity<DataDto<Long>> create(@RequestBody CategoryCreateDto categoryCreateDto) {
+        return service.create(categoryCreateDto);
     }
 
 
     @RequestMapping(value = "update", method = RequestMethod.PUT)
-    public ResponseEntity<DataDto<Boolean>> update(@RequestBody CategoryUpdateDto CategoryUpdateDto) {
-        return service.update(CategoryUpdateDto);
+    public ResponseEntity<DataDto<Boolean>> update(@RequestBody CategoryUpdateDto categoryUpdateDto) {
+        return service.update(categoryUpdateDto);
     }
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)

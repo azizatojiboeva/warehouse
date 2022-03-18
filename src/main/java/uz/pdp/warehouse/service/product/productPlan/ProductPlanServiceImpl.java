@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.dto.product.productPlan.ProductPlanCreateDto;
 import uz.pdp.warehouse.dto.product.productPlan.ProductPlanDto;
 import uz.pdp.warehouse.dto.product.productPlan.ProductPlanUpdateDto;
+import uz.pdp.warehouse.entity.product.ProductPlan;
 import uz.pdp.warehouse.mapper.product.ProductPlanMapper;
 import uz.pdp.warehouse.repository.product.ProductPlanRepository;
 import uz.pdp.warehouse.response.DataDto;
@@ -26,24 +27,35 @@ public class ProductPlanServiceImpl extends AbstractService<ProductPlanRepositor
 
     @Override
     public ResponseEntity<DataDto<Long>> create(ProductPlanCreateDto createDto) {
-        return null;
+        validator.validOnCreate(createDto);
+        ProductPlan productPlan = mapper.fromCreateDto(createDto);
+        ProductPlan newProductPlan = repository.save(productPlan);
+        return new ResponseEntity<>(new DataDto<>(newProductPlan.getId()));
     }
 
 
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
+        validator.validateKey(id);
+        repository.softDelete(id);
         return null;
     }
 
     @Override
     public ResponseEntity<DataDto<Boolean>> update(ProductPlanUpdateDto updateDto) {
-        return null;
+        validator.validOnUpdate(updateDto);
+        ProductPlan productPlan = mapper.fromUpdateDto(updateDto);
+        repository.save(productPlan);
+        return new ResponseEntity<>(new DataDto<>(Boolean.TRUE));
     }
 
 
     @Override
     public ResponseEntity<DataDto<ProductPlanDto>> get(Long id) {
-        return null;
+        validator.validateKey(id);
+        ProductPlan productPlan = repository.getByIdAndNotDeleted(id);
+        ProductPlanDto productPlanDto = mapper.toDto(productPlan);
+        return new ResponseEntity<>(new DataDto<>(productPlanDto));
     }
 
     @Override
@@ -53,6 +65,16 @@ public class ProductPlanServiceImpl extends AbstractService<ProductPlanRepositor
 
     @Override
     public ResponseEntity<DataDto<List<ProductPlanDto>>> getAll() {
-        return null;
+        List<ProductPlan> productPlans = repository.getAllAndNotDeleted();
+        List<ProductPlanDto> productPlanDtos = mapper.toDto(productPlans);
+        return new ResponseEntity<>(new DataDto<>(productPlanDtos, (long) productPlanDtos.size()));
+    }
+
+    @Override
+    public ResponseEntity<DataDto<List<ProductPlanDto>>> getAllByAgentId(Long agentId) {
+        validator.validateKey(agentId);
+        List<ProductPlan> productPlans = repository.getAllAndByAgentId(agentId);
+        List<ProductPlanDto> productPlanDtos = mapper.toDto(productPlans);
+        return new ResponseEntity<>(new DataDto<>(productPlanDtos, (long) productPlanDtos.size()));
     }
 }

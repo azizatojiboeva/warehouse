@@ -5,14 +5,17 @@ import uz.pdp.warehouse.dto.organization.OrganizationCreateDto;
 import uz.pdp.warehouse.dto.organization.OrganizationDto;
 import uz.pdp.warehouse.dto.organization.OrganizationUpdateDto;
 import uz.pdp.warehouse.entity.organization.Organization;
+import uz.pdp.warehouse.exception.validation.ValidationException;
 import uz.pdp.warehouse.mapper.organization.OrganizationMapper;
 import uz.pdp.warehouse.repository.organization.OrganizationRepository;
+import uz.pdp.warehouse.response.AppError;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.base.AbstractService;
 import uz.pdp.warehouse.validator.organization.OrganizationValidator;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -52,8 +55,8 @@ public class OrganizationServiceImpl extends AbstractService<OrganizationReposit
     @Override
     public ResponseEntity<DataDto<OrganizationDto>> get(Long id) {
         validator.validateKey(id);
-        Organization organization = repository.getByIdAndNotDeleted(id);
-        OrganizationDto organizationDto = mapper.toDto(organization);
+        Optional<Organization> organization = repository.getByIdAndNotDeleted(id);
+        OrganizationDto organizationDto = mapper.toDto(organization.get());
         return new ResponseEntity<>(new DataDto<>(organizationDto));
     }
 
@@ -64,8 +67,14 @@ public class OrganizationServiceImpl extends AbstractService<OrganizationReposit
 
     @Override
     public ResponseEntity<DataDto<List<OrganizationDto>>> getAll() {
-        List<Organization> organizations = repository.getAllAndNotDeleted();
-        List<OrganizationDto> organizationDtos = mapper.toDto(organizations);
-        return new ResponseEntity<>(new DataDto<>(organizationDtos, (long) organizations.size()));
+        Optional<List<Organization>> optionalOrganizations = repository.getAllAndNotDeleted();
+       try {
+           validator.validOnExistenceList(optionalOrganizations);
+       }catch (ValidationException e){
+           new ResponseEntity<>(new AppError())
+       }
+
+        List<OrganizationDto> organizationDtos = mapper.toDto(optionalOrganizations.get());
+        return new ResponseEntity<>(new DataDto<>(organizationDtos, (long) organizationDtos.size()));
     }
 }

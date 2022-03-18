@@ -8,6 +8,7 @@ import uz.pdp.warehouse.entity.organization.Organization;
 import uz.pdp.warehouse.repository.base.AbstractRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface OrganizationRepository extends AbstractRepository<Organization, Long> {
@@ -18,10 +19,10 @@ public interface OrganizationRepository extends AbstractRepository<Organization,
     void softDelete(@Param("id") Long id, UUID uuid);
 
     @Query(value = "select * from organization where not is_deleted and id = :id", nativeQuery = true)
-    Organization getByIdAndNotDeleted(@Param("id") Long id);
+    Optional<Organization> getByIdAndNotDeleted(@Param("id") Long id);
 
     @Query(value = "select * from organization where not is_deleted", nativeQuery = true)
-    List<Organization> getAllAndNotDeleted();
+    Optional<List<Organization>> getAllAndNotDeleted();
 
 
 }
