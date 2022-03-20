@@ -16,7 +16,7 @@ public interface OrganizationRepository extends AbstractRepository<Organization,
     @Modifying
     @Transactional
     @Query(value = "update public.organization set website=website||:uuid,name=name||:uuid,email=email||:uuid,is_deleted = true where id = :id", nativeQuery = true)
-    void softDelete(@Param("id") Long id, UUID uuid);
+    void softDelete(@Param("id") Long id, @Param("uuid") UUID uuid);
 
     @Query(value = "select * from organization where not is_deleted and id = :id", nativeQuery = true)
     Optional<Organization> getByIdAndNotDeleted(@Param("id") Long id);
