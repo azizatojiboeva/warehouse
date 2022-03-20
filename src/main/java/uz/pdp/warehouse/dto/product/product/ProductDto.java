@@ -13,20 +13,30 @@ import java.util.List;
 @Getter
 public class ProductDto extends GenericDto {
 
-    private String name;
-    private String description;
-    private Double initialPrice;
-    private Double sellingPrice;
-    private Integer softCount;
-    private Integer realCount;
-    private String madeBy;
-    private LocalDate expiryDate;
-    private LocalDate producedDate;
-    private List<CategoryDto> category;
+    public String name;
+    public String description;
+    public Double initialPrice;
+    public Double sellingPrice;
+    public Integer softCount;
+    public Integer realCount;
+    public String madeBy;
+    public LocalDate expiryDate;
+    public LocalDate producedDate;
+    public List<CategoryDto> category;
 
     @Builder(builderMethodName = "childBuilder")
 
-    public ProductDto(Long id, String name, String description, Double initialPrice, Double sellingPrice, Integer softCount, Integer realCount, String madeBy, LocalDate expiryDate, LocalDate producedDate, List<CategoryDto> category) {
+    public ProductDto(Long id,
+                      String name,
+                      String description,
+                      Double initialPrice,
+                      Double sellingPrice,
+                      Integer softCount,
+                      Integer realCount,
+                      String madeBy,
+                      LocalDate expiryDate,
+                      LocalDate producedDate,
+                      List<CategoryDto> category) {
         super(id);
         this.name = name;
         this.description = description;

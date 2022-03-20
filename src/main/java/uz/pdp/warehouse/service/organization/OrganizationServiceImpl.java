@@ -68,11 +68,11 @@ public class OrganizationServiceImpl extends AbstractService<OrganizationReposit
     @Override
     public ResponseEntity<DataDto<List<OrganizationDto>>> getAll() {
         Optional<List<Organization>> optionalOrganizations = repository.getAllAndNotDeleted();
-       try {
-           validator.validOnExistenceList(optionalOrganizations);
-       }catch (ValidationException e){
-           new ResponseEntity<>(new AppError())
-       }
+//       try {
+//           validator.validOnExistenceList(optionalOrganizations);
+//       }catch (ValidationException e){
+//           new ResponseEntity<>(new AppError());
+//       }
 
         List<OrganizationDto> organizationDtos = mapper.toDto(optionalOrganizations.get());
         return new ResponseEntity<>(new DataDto<>(organizationDtos, (long) organizationDtos.size()));

@@ -8,5 +8,4 @@ import uz.pdp.warehouse.service.base.GenericCrudService;
 
 public interface ProductService extends GenericCrudService<ProductDto, ProductCreateDto, ProductUpdateDto, Long> {
 
-
 }

@@ -1,5 +1,8 @@
 package uz.pdp.warehouse.dto.auth;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import uz.pdp.warehouse.dto.base.BaseGenericDto;
 
 /**

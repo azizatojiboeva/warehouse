@@ -13,10 +13,10 @@ import uz.pdp.warehouse.validator.product.ProductValidator;
 
 import java.util.List;
 @Service
-public class ProjectServiceImpl extends AbstractService<ProductRepository, ProductMapper, ProductValidator>
+public class ProductServiceImpl extends AbstractService<ProductRepository, ProductMapper, ProductValidator>
         implements ProductService {
 
-    private ProjectServiceImpl(ProductMapper mapper,
+    private ProductServiceImpl(ProductMapper mapper,
                                ProductValidator validator,
                                ProductRepository repository) {
         super(mapper, validator, repository);
@@ -52,4 +52,5 @@ public class ProjectServiceImpl extends AbstractService<ProductRepository, Produ
     public ResponseEntity<DataDto<List<ProductDto>>> getAll() {
         return null;
     }
+
 }
