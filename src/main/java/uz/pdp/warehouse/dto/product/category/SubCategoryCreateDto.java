@@ -6,8 +6,7 @@ import javax.validation.constraints.Positive;
 public class SubCategoryCreateDto {
 
     @NotNull
-    @Positive
-    public Long parentCategory;
+    public CategoryDto parentCategory;
 
     @NotNull
     public String name;

@@ -27,8 +27,12 @@ public class CategoryController extends AbstractController<CategoryService> {
         return service.create(categoryCreateDto);
     }
 
-    @PostMapping(value = "create_sub_category")
-    public ResponseEntity<DataDto<Long>> createSubCategory(@RequestBody SubCategoryCreateDto subCategoryCreateDto) {
+    @PostMapping(value = "create_sub_category/{id}")
+    public ResponseEntity<DataDto<Long>> createSubCategory(@PathVariable("id") Long id,
+                                                           @RequestBody SubCategoryCreateDto subCategoryCreateDto) {
+        ResponseEntity<DataDto<CategoryDto>> dataDtoResponseEntity = get(id);
+        CategoryDto categoryDto = dataDtoResponseEntity.getData().getData();
+        subCategoryCreateDto.parentCategory= categoryDto;
         return service.subCategoryCreate(subCategoryCreateDto);
     }
 
