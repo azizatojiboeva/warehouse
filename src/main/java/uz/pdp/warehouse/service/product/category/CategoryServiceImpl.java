@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.dto.product.category.CategoryCreateDto;
 import uz.pdp.warehouse.dto.product.category.CategoryDto;
 import uz.pdp.warehouse.dto.product.category.CategoryUpdateDto;
+import uz.pdp.warehouse.dto.product.category.SubCategoryCreateDto;
 import uz.pdp.warehouse.entity.organization.Organization;
 import uz.pdp.warehouse.entity.product.Category;
 import uz.pdp.warehouse.mapper.product.CategoryMapper;
@@ -31,6 +32,13 @@ public class CategoryServiceImpl extends AbstractService<CategoryRepository, Cat
     public ResponseEntity<DataDto<Long>> create(CategoryCreateDto createDto) {
         validator.validOnCreate(createDto);
         Category category = mapper.fromCreateDto(createDto);
+        Category newCategory = repository.save(category);
+        return new ResponseEntity<>(new DataDto<>(newCategory.getId()));
+    }
+
+    @Override
+    public ResponseEntity<DataDto<Long>> subCategoryCreate(SubCategoryCreateDto subCategoryCreateDto) {
+        Category category = mapper.fromSubCategoryCreateDto(subCategoryCreateDto);
         Category newCategory = repository.save(category);
         return new ResponseEntity<>(new DataDto<>(newCategory.getId()));
     }
@@ -70,4 +78,6 @@ public class CategoryServiceImpl extends AbstractService<CategoryRepository, Cat
         List<CategoryDto> categoryDtos = mapper.toDto(categories);
         return new ResponseEntity<>(new DataDto<>(categoryDtos, (long) categories.size()));
     }
+
+
 }

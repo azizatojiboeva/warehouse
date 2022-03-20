@@ -56,6 +56,15 @@ public class ProductPlanController extends AbstractController<ProductPlanService
 
     @RequestMapping(value = "update", method = RequestMethod.PUT)
     public ResponseEntity<DataDto<Boolean>> update(@RequestBody ProductPlanUpdateDto productPlanUpdateDto) {
+        try {
+            productCheckService.checkProductExistence(productPlanUpdateDto.product.getId());
+        } catch (ProductCheckExistence p) {
+            return new ResponseEntity<>(
+                    new DataDto<>(AppErrorDto.builder()
+                            .message("PRODUCT_NOT_FOUND")
+                            .status(HttpStatus.NOT_FOUND)
+                            .build()));
+        }
         return service.update(productPlanUpdateDto);
     }
 

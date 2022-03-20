@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import uz.pdp.warehouse.dto.product.category.CategoryCreateDto;
 import uz.pdp.warehouse.dto.product.category.CategoryDto;
 import uz.pdp.warehouse.dto.product.category.CategoryUpdateDto;
+import uz.pdp.warehouse.dto.product.category.SubCategoryCreateDto;
 import uz.pdp.warehouse.entity.product.Category;
 import uz.pdp.warehouse.mapper.base.AbstractMapper;
 
@@ -24,4 +25,6 @@ public interface CategoryMapper extends AbstractMapper<Category, CategoryDto, Ca
 
     @Override
     Category fromUpdateDto(CategoryUpdateDto updateDto);
+
+    Category fromSubCategoryCreateDto(SubCategoryCreateDto subCategoryCreateDto);
 }

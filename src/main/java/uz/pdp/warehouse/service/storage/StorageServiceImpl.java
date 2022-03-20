@@ -12,6 +12,7 @@ import uz.pdp.warehouse.service.base.AbstractService;
 import uz.pdp.warehouse.validator.storage.StorageValidator;
 
 import java.util.List;
+
 @Service
 public class StorageServiceImpl extends AbstractService<StorageRepository, StorageMapper, StorageValidator> implements StorageService {
 

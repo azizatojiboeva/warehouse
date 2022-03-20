@@ -5,6 +5,7 @@ import uz.pdp.warehouse.controller.base.AbstractController;
 import uz.pdp.warehouse.dto.product.category.CategoryCreateDto;
 import uz.pdp.warehouse.dto.product.category.CategoryDto;
 import uz.pdp.warehouse.dto.product.category.CategoryUpdateDto;
+import uz.pdp.warehouse.dto.product.category.SubCategoryCreateDto;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.product.category.CategoryService;
@@ -24,6 +25,11 @@ public class CategoryController extends AbstractController<CategoryService> {
     @PostMapping(value = "create")
     public ResponseEntity<DataDto<Long>> create(@RequestBody CategoryCreateDto categoryCreateDto) {
         return service.create(categoryCreateDto);
+    }
+
+    @PostMapping(value = "create_sub_category")
+    public ResponseEntity<DataDto<Long>> createSubCategory(@RequestBody SubCategoryCreateDto subCategoryCreateDto) {
+        return service.subCategoryCreate(subCategoryCreateDto);
     }
 
 
