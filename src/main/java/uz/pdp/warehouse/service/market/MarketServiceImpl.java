@@ -1,6 +1,7 @@
 package uz.pdp.warehouse.service.market;
 
 import org.springframework.stereotype.Service;
+import uz.pdp.warehouse.criteria.market.MarketCriteria;
 import uz.pdp.warehouse.dto.market.MarketCreateDto;
 import uz.pdp.warehouse.dto.market.MarketDto;
 import uz.pdp.warehouse.dto.market.MarketUpdateDto;
@@ -11,6 +12,7 @@ import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.base.AbstractService;
 import uz.pdp.warehouse.validator.market.MarketValidator;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -43,9 +45,10 @@ public class MarketServiceImpl extends AbstractService<MarketRepository, MarketM
     }
 
     @Override
-    public ResponseEntity<DataDto<List<MarketDto>>> getAll(Long id) {
+    public ResponseEntity<DataDto<List<MarketDto>>> getAll(MarketCriteria criteria) {
         return null;
     }
+
 
     @Override
     public ResponseEntity<DataDto<List<MarketDto>>> getAll() {

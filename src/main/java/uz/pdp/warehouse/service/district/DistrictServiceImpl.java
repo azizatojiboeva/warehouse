@@ -1,6 +1,7 @@
 package uz.pdp.warehouse.service.district;
 
 import org.springframework.stereotype.Service;
+import uz.pdp.warehouse.criteria.district.DistrictCriteria;
 import uz.pdp.warehouse.dto.district.DistrictCreateDto;
 import uz.pdp.warehouse.dto.district.DistrictDto;
 import uz.pdp.warehouse.dto.district.DistrictUpdateDto;
@@ -37,7 +38,7 @@ public class DistrictServiceImpl extends AbstractService<DistrictRepository, Dis
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
         validator.validateKey(id);
-        UUID uuid=  UUID.randomUUID();
+        UUID uuid = UUID.randomUUID();
         repository.deleteSoft(id, uuid.toString());
         return null;
     }
@@ -59,9 +60,10 @@ public class DistrictServiceImpl extends AbstractService<DistrictRepository, Dis
     }
 
     @Override
-    public ResponseEntity<DataDto<List<DistrictDto>>> getAll(Long id) {
+    public ResponseEntity<DataDto<List<DistrictDto>>> getAll(DistrictCriteria criteria) {
         return null;
     }
+
 
     @Override
     public ResponseEntity<DataDto<List<DistrictDto>>> getAll() {

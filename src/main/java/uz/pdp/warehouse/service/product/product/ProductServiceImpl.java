@@ -2,6 +2,7 @@ package uz.pdp.warehouse.service.product.product;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import uz.pdp.warehouse.criteria.product.product.ProductCriteria;
 import uz.pdp.warehouse.dto.product.product.ProductCreateDto;
 import uz.pdp.warehouse.dto.product.product.ProductDto;
 import uz.pdp.warehouse.dto.product.product.ProductUpdateDto;
@@ -79,9 +80,10 @@ public class ProductServiceImpl extends AbstractService<ProductRepository, Produ
     }
 
     @Override
-    public ResponseEntity<DataDto<List<ProductDto>>> getAll(Long id) {
+    public ResponseEntity<DataDto<List<ProductDto>>> getAll(ProductCriteria criteria) {
         return null;
     }
+
 
     @Override
     public ResponseEntity<DataDto<List<ProductDto>>> getAll() {

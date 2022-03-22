@@ -1,6 +1,7 @@
 package uz.pdp.warehouse.service.product.category;
 
 import org.springframework.stereotype.Service;
+import uz.pdp.warehouse.criteria.product.category.CategoryCriteria;
 import uz.pdp.warehouse.dto.product.category.CategoryCreateDto;
 import uz.pdp.warehouse.dto.product.category.CategoryDto;
 import uz.pdp.warehouse.dto.product.category.CategoryUpdateDto;
@@ -68,7 +69,7 @@ public class CategoryServiceImpl extends AbstractService<CategoryRepository, Cat
     }
 
     @Override
-    public ResponseEntity<DataDto<List<CategoryDto>>> getAll(Long id) {
+    public ResponseEntity<DataDto<List<CategoryDto>>> getAll(CategoryCriteria criteria) {
         return null;
     }
 

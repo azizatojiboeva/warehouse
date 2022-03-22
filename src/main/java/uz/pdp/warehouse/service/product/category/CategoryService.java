@@ -1,5 +1,6 @@
 package uz.pdp.warehouse.service.product.category;
 
+import uz.pdp.warehouse.criteria.product.category.CategoryCriteria;
 import uz.pdp.warehouse.dto.product.category.CategoryCreateDto;
 import uz.pdp.warehouse.dto.product.category.CategoryDto;
 import uz.pdp.warehouse.dto.product.category.CategoryUpdateDto;
@@ -16,24 +17,17 @@ import uz.pdp.warehouse.validator.product.CategoryValidator;
 
 import java.util.List;
 
-public interface CategoryService extends GenericCrudService<CategoryDto, CategoryCreateDto, CategoryUpdateDto,Long> {
+public interface CategoryService extends GenericCrudService<CategoryDto, CategoryCreateDto, CategoryUpdateDto, CategoryCriteria,Long> {
     @Override
     ResponseEntity<DataDto<Long>> create(CategoryCreateDto createDto);
 
-    @Override
-    ResponseEntity<DataDto<Void>> delete(Long id);
 
     @Override
     ResponseEntity<DataDto<Boolean>> update(CategoryUpdateDto updateDto);
-
-    @Override
-    ResponseEntity<DataDto<CategoryDto>> get(Long id);
-
-    @Override
-    ResponseEntity<DataDto<List<CategoryDto>>> getAll(Long id);
 
     @Override
     ResponseEntity<DataDto<List<CategoryDto>>> getAll();
 
     ResponseEntity<DataDto<Long>> subCategoryCreate(SubCategoryCreateDto subCategoryCreateDto);
 }
+

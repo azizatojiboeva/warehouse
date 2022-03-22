@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.config.encryption.PasswordEncoderConfigurer;
+import uz.pdp.warehouse.criteria.auth.user.UserCriteria;
 import uz.pdp.warehouse.dto.auth.*;
 import uz.pdp.warehouse.entity.auth.AuthRole;
 import uz.pdp.warehouse.entity.auth.AuthUser;
@@ -111,9 +112,10 @@ public class AuthUserServiceImpl extends
     }
 
     @Override
-    public ResponseEntity<DataDto<List<UserDto>>> getAll(Long id) {
+    public ResponseEntity<DataDto<List<UserDto>>> getAll(UserCriteria criteria) {
         return null;
     }
+
 
     @Override
     public ResponseEntity<DataDto<List<UserDto>>> getAll() {

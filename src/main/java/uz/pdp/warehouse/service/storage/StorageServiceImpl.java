@@ -2,6 +2,7 @@ package uz.pdp.warehouse.service.storage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import uz.pdp.warehouse.criteria.storage.StorageCriteria;
 import uz.pdp.warehouse.dto.storage.StorageCreateDto;
 import uz.pdp.warehouse.dto.storage.StorageDto;
 import uz.pdp.warehouse.dto.storage.StorageUpdateDto;
@@ -62,16 +63,16 @@ public class StorageServiceImpl extends AbstractService<StorageRepository, Stora
     public ResponseEntity<DataDto<StorageDto>> get(Long id) {
 
         Optional<Storage> byId = repository.getByIdAndNotDeleted(id);
-        if(!byId.isPresent()) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("User not found").status(HttpStatus.NOT_FOUND).build()),HttpStatus.OK);
+        if (!byId.isPresent()) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
+                .message("User not found").status(HttpStatus.NOT_FOUND).build()), HttpStatus.OK);
         Storage storage = byId.get();
-        StorageDto storageDto=mapper.toDto(storage);
+        StorageDto storageDto = mapper.toDto(storage);
 
-        return new ResponseEntity<>(new DataDto<>(storageDto),HttpStatus.OK);
+        return new ResponseEntity<>(new DataDto<>(storageDto), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<DataDto<List<StorageDto>>> getAll(Long id) {
+    public ResponseEntity<DataDto<List<StorageDto>>> getAll(StorageCriteria criteria) {
         return null;
     }
 

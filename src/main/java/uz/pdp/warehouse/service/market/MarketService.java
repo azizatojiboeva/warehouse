@@ -1,5 +1,6 @@
 package uz.pdp.warehouse.service.market;
 
+import uz.pdp.warehouse.criteria.market.MarketCriteria;
 import uz.pdp.warehouse.dto.market.MarketCreateDto;
 import uz.pdp.warehouse.dto.market.MarketDto;
 import uz.pdp.warehouse.dto.market.MarketUpdateDto;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * @author Axmadjonov Eliboy, Fri 12:13 AM,3/18/2022
  */
-public interface MarketService extends GenericCrudService<MarketDto, MarketCreateDto, MarketUpdateDto,Long> {
+public interface MarketService extends GenericCrudService<MarketDto, MarketCreateDto, MarketUpdateDto, MarketCriteria,Long> {
     @Override
     ResponseEntity<DataDto<Long>> create(MarketCreateDto createDto);
 
@@ -24,9 +25,6 @@ public interface MarketService extends GenericCrudService<MarketDto, MarketCreat
 
     @Override
     ResponseEntity<DataDto<MarketDto>> get(Long id);
-
-    @Override
-    ResponseEntity<DataDto<List<MarketDto>>> getAll(Long id);
 
     @Override
     ResponseEntity<DataDto<List<MarketDto>>> getAll();

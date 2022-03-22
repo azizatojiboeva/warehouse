@@ -1,6 +1,6 @@
 package uz.pdp.warehouse.service.district;
 
-import org.springframework.stereotype.Service;
+import uz.pdp.warehouse.criteria.district.DistrictCriteria;
 import uz.pdp.warehouse.dto.district.DistrictCreateDto;
 import uz.pdp.warehouse.dto.district.DistrictDto;
 import uz.pdp.warehouse.dto.district.DistrictUpdateDto;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author Axmadjonov Eliboy, Thu 2:06 PM,3/17/2022
  */
-public interface DistrictService extends GenericCrudService<DistrictDto, DistrictCreateDto, DistrictUpdateDto, Long> {
+public interface DistrictService extends GenericCrudService<DistrictDto, DistrictCreateDto, DistrictUpdateDto, DistrictCriteria, Long> {
     @Override
     ResponseEntity<DataDto<Long>> create(DistrictCreateDto createDto);
 
@@ -25,9 +25,6 @@ public interface DistrictService extends GenericCrudService<DistrictDto, Distric
 
     @Override
     ResponseEntity<DataDto<DistrictDto>> get(Long id);
-
-    @Override
-    ResponseEntity<DataDto<List<DistrictDto>>> getAll(Long id);
 
     @Override
     ResponseEntity<DataDto<List<DistrictDto>>> getAll();
