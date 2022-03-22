@@ -26,5 +26,6 @@ public interface CategoryMapper extends AbstractMapper<Category, CategoryDto, Ca
     @Override
     Category fromUpdateDto(CategoryUpdateDto updateDto);
 
+
     Category fromSubCategoryCreateDto(SubCategoryCreateDto subCategoryCreateDto);
 }

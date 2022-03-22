@@ -1,10 +1,6 @@
 package uz.pdp.warehouse.validator.base;
 
-import uz.pdp.warehouse.entity.organization.Organization;
 import uz.pdp.warehouse.exception.validation.ValidationException;
-
-import java.util.List;
-import java.util.Optional;
 
 public abstract class AbstractValidator<CD, UD, K> implements BaseGenericValidator {
 

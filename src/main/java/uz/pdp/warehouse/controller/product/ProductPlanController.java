@@ -21,50 +21,22 @@ import java.util.List;
 @RequestMapping("/productPlan/")
 public class ProductPlanController extends AbstractController<ProductPlanService> {
 
-    private final ProductCheckService productCheckService;
-    private final AuthUserCheckService authUserCheckService;
 
     public ProductPlanController(ProductPlanService service,
                                  ProductCheckService productCheckService,
                                  AuthUserCheckService authUserCheckService) {
         super(service);
-        this.productCheckService = productCheckService;
-        this.authUserCheckService = authUserCheckService;
     }
 
     @PostMapping(value = "create")
     public ResponseEntity<DataDto<Long>> create(@RequestBody ProductPlanCreateDto productPlanCreateDto) {
-        try {
-            authUserCheckService.checkProductExistence(productPlanCreateDto.agentId);
-            productCheckService.checkProductExistence(productPlanCreateDto.product.getId());
-        } catch (AuthUserCheckException a) {
-            return new ResponseEntity<>(
-                    new DataDto<>(AppErrorDto.builder()
-                            .message("USER_NOT_FOUND")
-                            .status(HttpStatus.NOT_FOUND)
-                            .build()));
-        } catch (ProductCheckExistence p) {
-            return new ResponseEntity<>(
-                    new DataDto<>(AppErrorDto.builder()
-                            .message("PRODUCT_NOT_FOUND")
-                            .status(HttpStatus.NOT_FOUND)
-                            .build()));
-        }
         return service.create(productPlanCreateDto);
     }
 
 
     @RequestMapping(value = "update", method = RequestMethod.PUT)
     public ResponseEntity<DataDto<Boolean>> update(@RequestBody ProductPlanUpdateDto productPlanUpdateDto) {
-        try {
-            productCheckService.checkProductExistence(productPlanUpdateDto.product.getId());
-        } catch (ProductCheckExistence p) {
-            return new ResponseEntity<>(
-                    new DataDto<>(AppErrorDto.builder()
-                            .message("PRODUCT_NOT_FOUND")
-                            .status(HttpStatus.NOT_FOUND)
-                            .build()));
-        }
+
         return service.update(productPlanUpdateDto);
     }
 

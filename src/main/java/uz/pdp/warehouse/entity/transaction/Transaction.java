@@ -22,7 +22,7 @@ public class Transaction extends Auditable {
     @Enumerated(EnumType.ORDINAL)
     private CashType cashType;
 
-    @OneToMany(mappedBy = "transaction",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "transactionId", fetch = FetchType.LAZY)
     private List<TransactionElement> elements;
 
 }

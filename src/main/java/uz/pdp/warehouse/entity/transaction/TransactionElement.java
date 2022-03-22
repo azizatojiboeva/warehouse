@@ -3,6 +3,7 @@ package uz.pdp.warehouse.entity.transaction;
 import lombok.Getter;
 import lombok.Setter;
 import uz.pdp.warehouse.entity.base.Auditable;
+import uz.pdp.warehouse.entity.product.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -13,7 +14,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class TransactionElement extends Auditable {
 
-    private String productName;
+    private Long productId;
 
     private Integer count;
 
@@ -21,7 +22,5 @@ public class TransactionElement extends Auditable {
 
     private Double totalPrice;
 
-    @ManyToOne
-    @JoinColumn(name = "transaction_id", nullable = true)
-    private Transaction transaction;
+    private Long transactionId;
 }
