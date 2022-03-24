@@ -2,7 +2,6 @@ package uz.pdp.warehouse.service.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.xml.bind.v2.TODO;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -20,7 +19,7 @@ import uz.pdp.warehouse.criteria.auth.user.UserCriteria;
 import uz.pdp.warehouse.dto.auth.*;
 import uz.pdp.warehouse.entity.auth.AuthRole;
 import uz.pdp.warehouse.entity.auth.AuthUser;
-import uz.pdp.warehouse.exception.UserNotFoundException;
+import uz.pdp.warehouse.exception.NotFoundException;
 import uz.pdp.warehouse.mapper.auth.AuthUserMapper;
 import uz.pdp.warehouse.repository.auth.AuthRoleRepository;
 import uz.pdp.warehouse.repository.auth.AuthUserRepository;
@@ -36,7 +35,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -104,7 +102,7 @@ public class AuthUserServiceImpl extends
     @Override
     public ResponseEntity<DataDto<UserDto>> get(Long id) {
         AuthUser authUser = repository.findById(id).orElseThrow(() -> {
-            throw new UserNotFoundException("User not found");
+            throw new NotFoundException("User not found");
         });
         UserDto userDto = mapper.toDto(authUser);
         userDto.setAuthRole(authUser.getRole());
@@ -134,7 +132,7 @@ public class AuthUserServiceImpl extends
     public ResponseEntity<DataDto<Void>> resetPassword(PasswordDto dto) {
         Optional<AuthUser> user = repository.findById(dto.getId());
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found");
+            throw new NotFoundException("User not found");
         }
         if (!dto.getOldPass().equalsIgnoreCase(dto.getNewPassword())) {
             throw new RuntimeException("Password doesn't match.");

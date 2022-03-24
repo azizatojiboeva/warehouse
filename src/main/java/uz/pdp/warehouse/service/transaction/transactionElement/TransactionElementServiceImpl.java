@@ -48,19 +48,21 @@ public class TransactionElementServiceImpl
 
     @Override
     public ResponseEntity<DataDto<Long>> create(TransactionElementCreateDto createDto) {
-        AppErrorDto errorDto = checkFields(createDto.productId, createDto.transactionId);
-        if (Objects.nonNull(errorDto)) {
-            return new ResponseEntity<>(new DataDto<>(errorDto));
-        }
-
-        try {
-            validator.validOnCreate(createDto);
-        } catch (ValidationException e) {
-            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                    .message(e.getMessage())
-                    .status(HttpStatus.BAD_REQUEST)
-                    .build()));
-        }
+//        AppErrorDto errorDto = checkFields(createDto.productId, createDto.transactionId);
+//        if (Objects.nonNull(errorDto)) {
+//            return new ResponseEntity<>(new DataDto<>(errorDto));
+//        }
+//
+//        try {
+        validator.validOnCreate(createDto);
+        productCheckService.checkProductExistence(createDto.productId);
+        transactionCheckService.checkTransactionExistence(createDto.productId);
+//        } catch (ValidationException e) {
+//            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
+//                    .message(e.getMessage())
+//                    .status(HttpStatus.BAD_REQUEST)
+//                    .build()));
+//        }
         TransactionElement transactionElement = mapper.fromCreateDto(createDto);
         TransactionElement newTransactionElement = repository.save(transactionElement);
         return new ResponseEntity<>(new DataDto<>(newTransactionElement.getId()));
@@ -136,23 +138,22 @@ public class TransactionElementServiceImpl
         return new ResponseEntity<>(new DataDto<>(Boolean.TRUE));
     }
 
-    private AppErrorDto checkFields(Long productId, Long transactionId) {
-        try {
-            productCheckService.checkProductExistence(productId);
-            transactionCheckService.checkTransactionExistence(transactionId);
-        } catch (ProductCheckException pe) {
-            return AppErrorDto.builder()
-                    .message("PRODUCT_NOT_FOUND")
-                    .status(HttpStatus.NOT_FOUND)
-                    .build();
-        } catch (TransactionCheckException te) {
-            return AppErrorDto.builder()
-                    .message("TRANSACTION_NOT_FOUND")
-                    .status(HttpStatus.NOT_FOUND)
-                    .build();
-        }
-        return null;
-    }
+//    private AppErrorDto checkFields(Long productId, Long transactionId) {
+//        try {
+//
+//        } catch (ProductCheckException pe) {
+//            return AppErrorDto.builder()
+//                    .message("PRODUCT_NOT_FOUND")
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .build();
+//        } catch (TransactionCheckException te) {
+//            return AppErrorDto.builder()
+//                    .message("TRANSACTION_NOT_FOUND")
+//                    .status(HttpStatus.NOT_FOUND)
+//                    .build();
+//        }
+//        return null;
+//    }
 
 }
 
