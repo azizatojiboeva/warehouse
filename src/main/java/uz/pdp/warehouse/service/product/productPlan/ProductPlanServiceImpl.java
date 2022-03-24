@@ -8,7 +8,7 @@ import uz.pdp.warehouse.dto.product.productPlan.ProductPlanDto;
 import uz.pdp.warehouse.dto.product.productPlan.ProductPlanUpdateDto;
 import uz.pdp.warehouse.entity.product.ProductPlan;
 import uz.pdp.warehouse.exception.auth.AuthUserCheckException;
-import uz.pdp.warehouse.exception.product.ProductCheckExistence;
+import uz.pdp.warehouse.exception.product.ProductCheckException;
 import uz.pdp.warehouse.exception.validation.ValidationException;
 import uz.pdp.warehouse.mapper.product.ProductPlanMapper;
 import uz.pdp.warehouse.repository.product.ProductPlanRepository;
@@ -53,7 +53,7 @@ public class ProductPlanServiceImpl extends AbstractService<ProductPlanRepositor
                             .message("USER_NOT_FOUND")
                             .status(HttpStatus.NOT_FOUND)
                             .build()));
-        } catch (ProductCheckExistence p) {
+        } catch (ProductCheckException p) {
             return new ResponseEntity<>(
                     new DataDto<>(AppErrorDto.builder()
                             .message("PRODUCT_NOT_FOUND")
@@ -95,7 +95,7 @@ public class ProductPlanServiceImpl extends AbstractService<ProductPlanRepositor
                     .status(HttpStatus.BAD_REQUEST)
                     .message(e.getMessage())
                     .build()));
-        } catch (ProductCheckExistence p) {
+        } catch (ProductCheckException p) {
             return new ResponseEntity<>(
                     new DataDto<>(AppErrorDto.builder()
                             .message("PRODUCT_NOT_FOUND")

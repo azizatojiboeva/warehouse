@@ -1,14 +1,24 @@
 package uz.pdp.warehouse.service.product.product;
 
 import org.springframework.stereotype.Service;
-import uz.pdp.warehouse.exception.product.ProductCheckExistence;
+import uz.pdp.warehouse.entity.product.Product;
+import uz.pdp.warehouse.exception.product.ProductCheckException;
+import uz.pdp.warehouse.repository.product.ProductRepository;
+
+import java.util.Optional;
 
 @Service
 public class ProductCheckService {
-    //repository
-    //mapper
+    private final ProductRepository repository;
+
+    public ProductCheckService(ProductRepository repository) {
+        this.repository = repository;
+    }
 
     public void checkProductExistence(Long productId) {
-//        throw new ProductCheckExistence();
+        Optional<Product> byId = repository.findById(productId);
+        if (!byId.isPresent()){
+            throw new ProductCheckException("INVALID_ID");
+        }
     }
 }

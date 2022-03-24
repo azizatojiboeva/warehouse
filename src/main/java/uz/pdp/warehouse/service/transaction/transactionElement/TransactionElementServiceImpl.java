@@ -1,17 +1,15 @@
 package uz.pdp.warehouse.service.transaction.transactionElement;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.criteria.transaction.transactionElement.TransactionElementCriteria;
-import uz.pdp.warehouse.dto.base.BaseGenericDto;
 import uz.pdp.warehouse.dto.transaction.transactionElement.TransactionElementCreateDto;
 import uz.pdp.warehouse.dto.transaction.transactionElement.TransactionElementDto;
 import uz.pdp.warehouse.dto.transaction.transactionElement.TransactionElementUpdateDto;
 import uz.pdp.warehouse.entity.transaction.TransactionElement;
-import uz.pdp.warehouse.exception.product.ProductCheckExistence;
+import uz.pdp.warehouse.exception.product.ProductCheckException;
 import uz.pdp.warehouse.exception.transaction.TransactionCheckException;
 import uz.pdp.warehouse.exception.validation.ValidationException;
 import uz.pdp.warehouse.mapper.transaction.transactionElement.TransactionElementMapper;
@@ -25,7 +23,6 @@ import uz.pdp.warehouse.service.transaction.transaction.TransactionCheckService;
 import uz.pdp.warehouse.validator.transaction.transactionElement.TransactionElementValidator;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -143,7 +140,7 @@ public class TransactionElementServiceImpl
         try {
             productCheckService.checkProductExistence(productId);
             transactionCheckService.checkTransactionExistence(transactionId);
-        } catch (ProductCheckExistence pe) {
+        } catch (ProductCheckException pe) {
             return AppErrorDto.builder()
                     .message("PRODUCT_NOT_FOUND")
                     .status(HttpStatus.NOT_FOUND)
