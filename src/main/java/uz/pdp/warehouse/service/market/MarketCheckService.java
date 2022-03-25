@@ -2,6 +2,7 @@ package uz.pdp.warehouse.service.market;
 
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.entity.market.Market;
+import uz.pdp.warehouse.exception.market.MarketCheckException;
 import uz.pdp.warehouse.repository.market.MarketRepository;
 
 import java.util.Optional;

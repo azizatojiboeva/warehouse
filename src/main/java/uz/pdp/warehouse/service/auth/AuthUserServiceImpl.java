@@ -20,6 +20,7 @@ import uz.pdp.warehouse.dto.auth.*;
 import uz.pdp.warehouse.entity.auth.AuthRole;
 import uz.pdp.warehouse.entity.auth.AuthUser;
 import uz.pdp.warehouse.exception.NotFoundException;
+import uz.pdp.warehouse.exception.UserNotFoundException;
 import uz.pdp.warehouse.mapper.auth.AuthUserMapper;
 import uz.pdp.warehouse.repository.auth.AuthRoleRepository;
 import uz.pdp.warehouse.repository.auth.AuthUserRepository;
@@ -102,7 +103,7 @@ public class AuthUserServiceImpl extends
     @Override
     public ResponseEntity<DataDto<UserDto>> get(Long id) {
         AuthUser authUser = repository.findById(id).orElseThrow(() -> {
-            throw new NotFoundException("User not found");
+            throw new UserNotFoundException("User not found");
         });
         UserDto userDto = mapper.toDto(authUser);
         userDto.setAuthRole(authUser.getRole());

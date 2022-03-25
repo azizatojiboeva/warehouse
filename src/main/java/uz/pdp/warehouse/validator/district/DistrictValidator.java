@@ -6,23 +6,31 @@ import uz.pdp.warehouse.dto.district.DistrictUpdateDto;
 import uz.pdp.warehouse.exception.validation.ValidationException;
 import uz.pdp.warehouse.validator.base.AbstractValidator;
 
-/**
- * @author Axmadjonov Eliboy, Thu 2:20 PM,3/17/2022
- */
+import java.util.Objects;
+
+
 @Component
 public class DistrictValidator extends AbstractValidator<DistrictCreateDto, DistrictUpdateDto, Long> {
     @Override
-    public void validateKey(Long id) throws ValidationException {
-
+    public void validateKey(Long id) {
+        if (Objects.isNull(id)) {
+            throw new ValidationException("BAD_REQUEST");
+        }
     }
 
     @Override
     public void validOnCreate(DistrictCreateDto createDto) throws ValidationException {
-
+        if (Objects.isNull(createDto.getName()) || Objects.isNull(createDto.getLongitude()) ||
+                Objects.isNull(createDto.getLatitude()) || Objects.isNull(createDto.getAgentId())) {
+            throw new ValidationException("SOMETHING_WENT_WRONG");
+        }
     }
 
     @Override
     public void validOnUpdate(DistrictUpdateDto updateDto) throws ValidationException {
-
+        if (Objects.isNull(updateDto.getName()) || Objects.isNull(updateDto.getLongitude()) ||
+                Objects.isNull(updateDto.getLatitude())) {
+            throw new ValidationException("SOMETHING_WENT_WRONG");
+        }
     }
 }

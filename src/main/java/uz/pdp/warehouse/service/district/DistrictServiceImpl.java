@@ -1,11 +1,15 @@
 package uz.pdp.warehouse.service.district;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.criteria.district.DistrictCriteria;
 import uz.pdp.warehouse.dto.district.DistrictCreateDto;
 import uz.pdp.warehouse.dto.district.DistrictDto;
 import uz.pdp.warehouse.dto.district.DistrictUpdateDto;
+import uz.pdp.warehouse.dto.market.MarketDto;
 import uz.pdp.warehouse.entity.district.District;
+import uz.pdp.warehouse.entity.market.Market;
 import uz.pdp.warehouse.mapper.district.DistrictMapper;
 import uz.pdp.warehouse.repository.district.DistrictRepository;
 import uz.pdp.warehouse.response.DataDto;
@@ -61,14 +65,15 @@ public class DistrictServiceImpl extends AbstractService<DistrictRepository, Dis
 
     @Override
     public ResponseEntity<DataDto<List<DistrictDto>>> getAll(DistrictCriteria criteria) {
-        return null;
+        Pageable pageable = PageRequest.of(criteria.getPage(), criteria.getSize());
+        List<District> all = repository.findAll(pageable).getContent();
+        List<DistrictDto> districtDtoList = mapper.toDto(all);
+        return new ResponseEntity<>(new DataDto<>(districtDtoList, (long) districtDtoList.size()));
     }
 
 
     @Override
     public ResponseEntity<DataDto<List<DistrictDto>>> getAll() {
-        List<District> districts = repository.findAllAndNotIsDelete();
-        List<DistrictDto> districtDtos = mapper.toDto(districts);
-        return new ResponseEntity<>(new DataDto<>(districtDtos));
+       return null;
     }
 }

@@ -21,7 +21,7 @@ public class ProductValidator extends AbstractValidator<ProductCreateDto, Produc
         if (Objects.isNull(productCreateDto.getName()) || Objects.isNull(productCreateDto.getInitialPrice())
                 || Objects.isNull(productCreateDto.getSellingPrice()) || Objects.isNull(productCreateDto.getSoftCount())
                 || Objects.isNull(productCreateDto.getRealCount()) || Objects.isNull(productCreateDto.getCategory())) {
-            throw new ValidationException("SOME_THING_WANT_WRONG");
+            throw new ValidationException("SOMETHING_WENT_WRONG");
         }
 
     }
@@ -32,7 +32,7 @@ public class ProductValidator extends AbstractValidator<ProductCreateDto, Produc
         if (Objects.isNull(productUpdateDto.getName()) || Objects.isNull(productUpdateDto.getId()) || Objects.isNull(productUpdateDto.getInitialPrice())
                 || Objects.isNull(productUpdateDto.getSellingPrice()) || Objects.isNull(productUpdateDto.getSoftCount())
                 || Objects.isNull(productUpdateDto.getRealCount()) || Objects.isNull(productUpdateDto.getCategory())) {
-            throw new ValidationException("SOME_THING_WANT_WRONG");
+            throw new ValidationException("SOMETHING_WENT_WRONG");
         }
 
     }

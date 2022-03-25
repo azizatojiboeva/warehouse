@@ -53,7 +53,8 @@ public class ProductServiceImpl extends AbstractService<ProductRepository, Produ
         validator.validOnCreate(createDto);
         Product product = mapper.fromCreateDto(createDto);
         Product save = repository.save(product);
-        if (Objects.nonNull(save)) return new ResponseEntity<>(new DataDto<>(save.getId()));
+        if (Objects.nonNull(save))
+            return new ResponseEntity<>(new DataDto<>(save.getId()));
         return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("BAD_REQUEST").status(HttpStatus.BAD_REQUEST).build()));
     }
 
@@ -81,7 +82,7 @@ public class ProductServiceImpl extends AbstractService<ProductRepository, Produ
         if (Objects.nonNull(save)) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
                 .message("Successfully updated").status(HttpStatus.OK).build()), HttpStatus.OK);
         return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("SOME_THING_WANT_WRONG_DOESN`T_UPDATE").status(HttpStatus.BAD_REQUEST).build()));
+                .message("SOME_THING_WENT_WRONG_NOT_UPDATE").status(HttpStatus.BAD_REQUEST).build()));
     }
 
 
