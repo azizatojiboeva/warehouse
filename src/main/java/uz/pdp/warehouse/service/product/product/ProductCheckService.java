@@ -2,7 +2,6 @@ package uz.pdp.warehouse.service.product.product;
 
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.entity.product.Product;
-import uz.pdp.warehouse.exception.product.ProductCheckException;
 import uz.pdp.warehouse.repository.product.ProductRepository;
 
 import java.util.Optional;

@@ -2,9 +2,12 @@ package uz.pdp.warehouse.service.market;
 
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.criteria.market.MarketCriteria;
+import uz.pdp.warehouse.dto.district.DistrictDto;
 import uz.pdp.warehouse.dto.market.MarketCreateDto;
 import uz.pdp.warehouse.dto.market.MarketDto;
 import uz.pdp.warehouse.dto.market.MarketUpdateDto;
+import uz.pdp.warehouse.entity.district.District;
+import uz.pdp.warehouse.entity.market.Market;
 import uz.pdp.warehouse.mapper.market.MarketMapper;
 import uz.pdp.warehouse.repository.market.MarketRepository;
 import uz.pdp.warehouse.response.DataDto;
@@ -14,6 +17,7 @@ import uz.pdp.warehouse.validator.market.MarketValidator;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Axmadjonov Eliboy, Fri 12:13 AM,3/18/2022
@@ -26,22 +30,34 @@ public class MarketServiceImpl extends AbstractService<MarketRepository, MarketM
 
     @Override
     public ResponseEntity<DataDto<Long>> create(MarketCreateDto createDto) {
-        return null;
+        validator.validOnCreate(createDto);
+        Market market = mapper.fromCreateDto(createDto);
+        Market save = repository.save(market);
+        return new ResponseEntity<>(new DataDto<>(save.getId()));
     }
 
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
+        validator.validateKey(id);
+        UUID uuid = UUID.randomUUID();
+        repository.deleteSoft(id, uuid.toString());
         return null;
     }
 
     @Override
     public ResponseEntity<DataDto<Boolean>> update(MarketUpdateDto updateDto) {
-        return null;
+        validator.validOnUpdate(updateDto);
+        Market market = mapper.fromUpdateDto(updateDto);
+        repository.save(market);
+        return new ResponseEntity<>(new DataDto<>(Boolean.TRUE));
     }
 
     @Override
     public ResponseEntity<DataDto<MarketDto>> get(Long id) {
-        return null;
+        validator.validateKey(id);
+        Market market = repository.getByIdAndNotDelete(id);
+        MarketDto marketDto = mapper.toDto(market);
+        return new ResponseEntity<>(new DataDto<>(marketDto));
     }
 
     @Override
@@ -52,6 +68,8 @@ public class MarketServiceImpl extends AbstractService<MarketRepository, MarketM
 
     @Override
     public ResponseEntity<DataDto<List<MarketDto>>> getAll() {
-        return null;
+        List<Market> marketList = repository.findAllAndNotIsDelete();
+        List<MarketDto> marketDtoList = mapper.toDto(marketList);
+        return new ResponseEntity<>(new DataDto<>(marketDtoList));
     }
 }
