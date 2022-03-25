@@ -9,4 +9,7 @@ import uz.pdp.warehouse.repository.base.AbstractRepository;
  */
 @Repository
 public interface MarketRepository extends AbstractRepository<Market, Long> {
+
+    Market findByIdAndDeletedFalse(Long id);
+
 }

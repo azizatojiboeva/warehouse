@@ -10,7 +10,5 @@ public class TransactionElementCreateDto implements BaseGenericDto {
 
     public Double price;
 
-    public Double totalPrice;
-
     public Long transactionId;
 }
