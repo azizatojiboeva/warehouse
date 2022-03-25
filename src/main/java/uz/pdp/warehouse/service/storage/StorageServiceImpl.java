@@ -23,9 +23,13 @@ import java.util.UUID;
 @Service
 public class StorageServiceImpl extends AbstractService<StorageRepository, StorageMapper, StorageValidator> implements StorageService {
 
-    protected StorageServiceImpl(StorageMapper mapper, StorageValidator validator, StorageRepository repository) {
+    private final StorageCheckService storageCheckService;
+
+    protected StorageServiceImpl(StorageMapper mapper, StorageValidator validator, StorageRepository repository, StorageCheckService storageCheckService) {
         super(mapper, validator, repository);
+        this.storageCheckService = storageCheckService;
     }
+
 
     @Override
     public ResponseEntity<DataDto<Long>> create(StorageCreateDto createDto) {
@@ -35,47 +39,48 @@ public class StorageServiceImpl extends AbstractService<StorageRepository, Stora
         return new ResponseEntity<>(new DataDto<>(save.getId()));
     }
 
+
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
+        storageCheckService.checkStoreExists(id);
         UUID uuid = UUID.randomUUID();
         boolean b = repository.softDelete(id, uuid);
-        if (b) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("Successfully deleted").status(HttpStatus.OK).build()));
-        return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
+        if (b)
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Successfully deleted").status(HttpStatus.OK).build()));
+        return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
     }
+
 
     @Override
     public ResponseEntity<DataDto<Boolean>> update(StorageUpdateDto updateDto) {
+
+        validator.validOnUpdate(updateDto);
+        storageCheckService.checkStoreExists(updateDto.getId());
         Storage storage = mapper.fromUpdateDto(updateDto);
         Storage save = repository.save(storage);
-
-        if (Objects.nonNull(save)) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("Successfully updated").status(HttpStatus.OK).build()), HttpStatus.OK);
-
-
-        return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
+        if ( Objects.nonNull(save) )
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Successfully updated").status(HttpStatus.OK).build()), HttpStatus.OK);
+        return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
 
     }
+
 
     @Override
     public ResponseEntity<DataDto<StorageDto>> get(Long id) {
 
-        Optional<Storage> byId = repository.getByIdAndNotDeleted(id);
-        if (!byId.isPresent()) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("User not found").status(HttpStatus.NOT_FOUND).build()), HttpStatus.OK);
-        Storage storage = byId.get();
+        storageCheckService.checkStoreExists(id);
+        Storage storage = repository.getByIdAndNotDeleted(id);
         StorageDto storageDto = mapper.toDto(storage);
 
         return new ResponseEntity<>(new DataDto<>(storageDto), HttpStatus.OK);
     }
 
+
     @Override
     public ResponseEntity<DataDto<List<StorageDto>>> getAll(StorageCriteria criteria) {
         return null;
     }
-
+    //TODO getALL funcsiyasini getAll with criteriaga o'tkazish kerak
     @Override
     public ResponseEntity<DataDto<List<StorageDto>>> getAll() {
         List<Storage> storages = repository.getAllAndNotDeleted();
@@ -86,4 +91,6 @@ public class StorageServiceImpl extends AbstractService<StorageRepository, Stora
 
         return new ResponseEntity<>(new DataDto<>(storageDtos));
     }
+
+
 }

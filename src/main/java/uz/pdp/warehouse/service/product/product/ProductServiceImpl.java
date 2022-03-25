@@ -8,9 +8,6 @@ import uz.pdp.warehouse.dto.product.product.ProductCreateDto;
 import uz.pdp.warehouse.dto.product.product.ProductDto;
 import uz.pdp.warehouse.dto.product.product.ProductUpdateDto;
 import uz.pdp.warehouse.entity.product.Product;
-import uz.pdp.warehouse.exception.category.CategoryCheckException;
-import uz.pdp.warehouse.exception.product.ProductCheckException;
-import uz.pdp.warehouse.exception.validation.ValidationException;
 import uz.pdp.warehouse.mapper.product.ProductMapper;
 import uz.pdp.warehouse.repository.product.ProductRepository;
 import uz.pdp.warehouse.response.AppErrorDto;
@@ -47,119 +44,79 @@ public class ProductServiceImpl extends AbstractService<ProductRepository, Produ
     @Override
     public ResponseEntity<DataDto<Long>> create(ProductCreateDto createDto) {
 
-        // Todo bu yerda product yaratilinsihdan oldin chek service orqali tekshirib olish kerak
+        // TODO Category null kelishi ham mumkin agar category null bo'lmasa databaseda bor yoki yo'q ligini tekshirishkerak
+
         AppErrorDto errorDto = checkFields(createDto.getCategory());
         if (Objects.nonNull(errorDto)) {
             return new ResponseEntity<>(new DataDto<>(errorDto));
         }
-
-            validator.validOnCreate(createDto);
+        validator.validOnCreate(createDto);
         Product product = mapper.fromCreateDto(createDto);
         Product save = repository.save(product);
         if (Objects.nonNull(save)) return new ResponseEntity<>(new DataDto<>(save.getId()));
         return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("BAD_REQUEST").status(HttpStatus.BAD_REQUEST).build()));
     }
 
+
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
 
-        try {
-            productCheckService.checkProductExistence(id);
-        }catch (ProductCheckException e){
-            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-            .message(e.getMessage())
-            .status(HttpStatus.NOT_FOUND)
-            .build()));
-        }
-
+        productCheckService.checkProductExistence(id);
         UUID uuid = UUID.randomUUID();
         boolean bool = repository.softDelete(id, uuid);
-        if (bool) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("Successfully deleted").status(HttpStatus.OK).build()));
-        return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
+        if (bool)
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Successfully deleted").status(HttpStatus.OK).build()));
+        return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
 
     }
+
 
     @Override
     public ResponseEntity<DataDto<Boolean>> update(ProductUpdateDto updateDto) {
 
-        try {
-            validator.validOnUpdate(updateDto);
-            productCheckService.checkProductExistence(updateDto.getId());
-        }catch (ProductCheckException e){
-            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                    .message(e.getMessage())
-                    .status(HttpStatus.NOT_FOUND)
-                    .build()));
-        }catch (ValidationException e){
-            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                    .message(e.getMessage())
-                    .status(HttpStatus.BAD_REQUEST)
-                    .build()));
-        }
-
+        validator.validOnUpdate(updateDto);
+        productCheckService.checkProductExistence(updateDto.getId());
         Product product = mapper.fromUpdateDto(updateDto);
         Product save = repository.save(product);
-
         if (Objects.nonNull(save)) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
                 .message("Successfully updated").status(HttpStatus.OK).build()), HttpStatus.OK);
-
-
         return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
                 .message("SOME_THING_WANT_WRONG_DOESN`T_UPDATE").status(HttpStatus.BAD_REQUEST).build()));
     }
 
+
     @Override
     public ResponseEntity<DataDto<ProductDto>> get(Long id) {
 
-        try {
-            productCheckService.checkProductExistence(id);
-        }catch (ProductCheckException e){
-            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                    .message(e.getMessage())
-                    .status(HttpStatus.NOT_FOUND)
-                    .build()));
-        }
-
+        productCheckService.checkProductExistence(id);
         Optional<Product> byId = repository.getByIdAndNotDeleted(id);
-        if (!byId.isPresent()) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
+        if (byId.isEmpty()) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
                 .message("User not found").status(HttpStatus.NOT_FOUND).build()), HttpStatus.OK);
         Product product = byId.get();
         ProductDto productDto = mapper.toDto(product);
-
         return new ResponseEntity<>(new DataDto<>(productDto), HttpStatus.OK);
     }
 
+
     @Override
     public ResponseEntity<DataDto<List<ProductDto>>> getAll(ProductCriteria criteria) {
+        // todo getAll with Criteria
         return null;
     }
-
+//TODO getALL funcsiyasini getAll with criteriaga o'tkazish kerak
 
     @Override
     public ResponseEntity<DataDto<List<ProductDto>>> getAll() {
-
         List<Product> allProducts = repository.getAllAndNotDeleted();
-
-        if (Objects.isNull(allProducts)) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
-
+        if (Objects.isNull(allProducts))
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
         List<ProductDto> allProductDtos = mapper.toDto(allProducts);
-
         return new ResponseEntity<>(new DataDto<>(allProductDtos));
     }
 
     private AppErrorDto checkFields(List<CategoryDto> categories) {
-        try {
-            for (CategoryDto category : categories) {
-                categoryCheckService.checkCategoryExistence(category.getId());
-            }
-        } catch (CategoryCheckException e) {
-            return AppErrorDto.builder()
-                    .message("CATEGORY_NOT_FOUND")
-                    .status(HttpStatus.NOT_FOUND)
-                    .build();
+        for (CategoryDto category : categories) {
+            categoryCheckService.checkCategoryExistence(category.getId());
         }
         return null;
     }

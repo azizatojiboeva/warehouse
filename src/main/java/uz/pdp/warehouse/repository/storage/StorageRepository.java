@@ -16,7 +16,7 @@ public interface StorageRepository extends AbstractRepository<Storage, Long> {
     boolean softDelete(@Param("id") Long id, @Param("uuid") UUID uuid);
 
     @Query(value = "select * from storage where not is_deleted and id = :id", nativeQuery = true)
-    Optional<Storage> getByIdAndNotDeleted(@Param("id") Long id);
+    Storage getByIdAndNotDeleted(@Param("id") Long id);
 
     @Query(value = "select * from storage where not is_deleted", nativeQuery = true)
     List<Storage> getAllAndNotDeleted();
