@@ -81,4 +81,13 @@ public class TransactionServiceImpl
     public ResponseEntity<DataDto<List<TransactionDto>>> getAll() {
         return null;
     }
+
+    @Override
+    public ResponseEntity<DataDto<List<TransactionDto>>> getAllByMarketId(Long id) {
+        validator.validateKey(id);
+        marketCheckService.checkMarketExistence(id);
+        List<Transaction> transactions = repository.findAllByMarketIdAndDeletedFalse(id);
+        List<TransactionDto> transactionDtos = mapper.toDto(transactions);
+        return new ResponseEntity<>(new DataDto<>(transactionDtos, (long) transactionDtos.size()));
+    }
 }
