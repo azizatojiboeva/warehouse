@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({ValidationException.class})
+    @ExceptionHandler({ValidationException.class, IllegalArgumentException.class})
     public ResponseEntity<AppError> handleValidation(ValidationException e, WebRequest webRequest) {
         return new ResponseEntity<>(
                 new AppError(e.getMessage(),

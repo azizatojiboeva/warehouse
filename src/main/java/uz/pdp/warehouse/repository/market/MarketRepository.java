@@ -20,4 +20,6 @@ public interface MarketRepository extends AbstractRepository<Market, Long> {
 
     @Query(value = "select * from public.market where not is_deleted", nativeQuery = true)
     List<Market> findAllAndNotIsDelete();
+
+    Market findByIdAndDeletedFalse(Long marketId);
 }

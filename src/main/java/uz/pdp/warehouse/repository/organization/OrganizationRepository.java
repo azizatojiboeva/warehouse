@@ -1,11 +1,13 @@
 package uz.pdp.warehouse.repository.organization;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import uz.pdp.warehouse.entity.organization.Organization;
 import uz.pdp.warehouse.repository.base.AbstractRepository;
+import uz.pdp.warehouse.service.organization.OrganizationCheckService;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,4 +27,5 @@ public interface OrganizationRepository extends AbstractRepository<Organization,
     Optional<List<Organization>> getAllAndNotDeleted();
 
 
+    Organization findByIdAndDeletedFalse(Long id);
 }
