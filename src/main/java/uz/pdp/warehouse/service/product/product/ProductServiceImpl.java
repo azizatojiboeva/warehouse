@@ -14,7 +14,7 @@ import uz.pdp.warehouse.response.AppErrorDto;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.base.AbstractService;
-import uz.pdp.warehouse.service.product.category.CategoryCheckService.CategoryCheckService;
+import uz.pdp.warehouse.service.product.category.CategoryCheckService;
 import uz.pdp.warehouse.validator.product.ProductValidator;
 
 import java.util.List;

@@ -6,7 +6,6 @@ import uz.pdp.warehouse.dto.product.category.CategoryCreateDto;
 import uz.pdp.warehouse.dto.product.category.CategoryDto;
 import uz.pdp.warehouse.dto.product.category.CategoryUpdateDto;
 import uz.pdp.warehouse.dto.product.category.SubCategoryCreateDto;
-import uz.pdp.warehouse.entity.organization.Organization;
 import uz.pdp.warehouse.entity.product.Category;
 import uz.pdp.warehouse.mapper.product.CategoryMapper;
 import uz.pdp.warehouse.repository.product.CategoryRepository;
@@ -16,7 +15,6 @@ import uz.pdp.warehouse.service.base.AbstractService;
 import uz.pdp.warehouse.validator.product.CategoryValidator;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class CategoryServiceImpl extends AbstractService<CategoryRepository, CategoryMapper, CategoryValidator>

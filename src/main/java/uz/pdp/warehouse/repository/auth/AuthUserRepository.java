@@ -30,6 +30,8 @@ public interface AuthUserRepository extends AbstractRepository<AuthUser, Long> {
     @Query("from AuthUser a where a.email =:email")
     AuthUser findByEmail(@Param("email")String email);
 
+    AuthUser findByIdAndDeletedFalse(Long id);
+
 
 
 }

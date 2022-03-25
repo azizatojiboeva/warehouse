@@ -13,27 +13,33 @@ import uz.pdp.warehouse.response.AppErrorDto;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.base.AbstractService;
+import uz.pdp.warehouse.service.organization.OrganizationCheckService;
 import uz.pdp.warehouse.validator.storage.StorageValidator;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class StorageServiceImpl extends AbstractService<StorageRepository, StorageMapper, StorageValidator> implements StorageService {
 
     private final StorageCheckService storageCheckService;
+    private final OrganizationCheckService organizationCheckService;
 
-    protected StorageServiceImpl(StorageMapper mapper, StorageValidator validator, StorageRepository repository, StorageCheckService storageCheckService) {
+    protected StorageServiceImpl(StorageMapper mapper,
+                                 StorageValidator validator,
+                                 StorageRepository repository,
+                                 StorageCheckService storageCheckService, OrganizationCheckService organizationCheckService) {
         super(mapper, validator, repository);
         this.storageCheckService = storageCheckService;
+        this.organizationCheckService = organizationCheckService;
     }
 
 
     @Override
     public ResponseEntity<DataDto<Long>> create(StorageCreateDto createDto) {
         validator.validOnCreate(createDto);
+        organizationCheckService.checkForOrganizationExistence(createDto.getOrganization_id());
         Storage storage = mapper.fromCreateDto(createDto);
         Storage save = repository.save(storage);
         return new ResponseEntity<>(new DataDto<>(save.getId()));
@@ -55,10 +61,11 @@ public class StorageServiceImpl extends AbstractService<StorageRepository, Stora
     public ResponseEntity<DataDto<Boolean>> update(StorageUpdateDto updateDto) {
 
         validator.validOnUpdate(updateDto);
+        organizationCheckService.checkForOrganizationExistence(updateDto.getOrganization_id());
         storageCheckService.checkStoreExists(updateDto.getId());
         Storage storage = mapper.fromUpdateDto(updateDto);
         Storage save = repository.save(storage);
-        if ( Objects.nonNull(save) )
+        if (Objects.nonNull(save))
             return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Successfully updated").status(HttpStatus.OK).build()), HttpStatus.OK);
         return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
 
@@ -80,6 +87,7 @@ public class StorageServiceImpl extends AbstractService<StorageRepository, Stora
     public ResponseEntity<DataDto<List<StorageDto>>> getAll(StorageCriteria criteria) {
         return null;
     }
+
     //TODO getALL funcsiyasini getAll with criteriaga o'tkazish kerak
     @Override
     public ResponseEntity<DataDto<List<StorageDto>>> getAll() {

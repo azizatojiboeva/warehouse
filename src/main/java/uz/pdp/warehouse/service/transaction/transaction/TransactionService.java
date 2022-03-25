@@ -31,4 +31,6 @@ public interface TransactionService extends
 
     @Override
     ResponseEntity<DataDto<List<TransactionDto>>> getAll();
+
+    ResponseEntity<DataDto<List<TransactionDto>>> getAllByMarketId(Long id);
 }

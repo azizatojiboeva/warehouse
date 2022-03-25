@@ -17,7 +17,11 @@ public class ProductCheckService {
 
     public void checkProductExistence(Long productId) {
         Optional<Product> byId = repository.findById(productId);
-        if (byId.isEmpty()){
+        checkProductExistence(byId);
+    }
+
+    public void checkProductExistence(Optional<Product> product) {
+        if (product.isEmpty()) {
             throw new NotFoundException("PRODUCT_NOT_FOUND");
         }
     }

@@ -4,21 +4,20 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.pdp.warehouse.dto.base.BaseGenericDto;
 
-@Setter
 public class OrganizationCreateDto implements BaseGenericDto {
 
-    private String name;
+    public String name;
 
-    private Double latitude;
+    public Double latitude;
 
-    private Double longitude;
+    public Double longitude;
 
-    private String website;
+    public String website;
 
-    private String logo;
+    public String logo;
 
-    private String code;
+    public String code;
 
-    private String email;
+    public String email;
 
 }
