@@ -9,8 +9,6 @@ import uz.pdp.warehouse.dto.transaction.transactionElement.TransactionElementCre
 import uz.pdp.warehouse.dto.transaction.transactionElement.TransactionElementDto;
 import uz.pdp.warehouse.dto.transaction.transactionElement.TransactionElementUpdateDto;
 import uz.pdp.warehouse.entity.transaction.TransactionElement;
-import uz.pdp.warehouse.exception.product.ProductCheckException;
-import uz.pdp.warehouse.exception.transaction.TransactionCheckException;
 import uz.pdp.warehouse.exception.validation.ValidationException;
 import uz.pdp.warehouse.mapper.transaction.transactionElement.TransactionElementMapper;
 import uz.pdp.warehouse.repository.transaction.transactionElement.TransactionElementRepository;

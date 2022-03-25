@@ -29,5 +29,11 @@ public class StorageValidator extends AbstractValidator<StorageCreateDto, Storag
     @Override
     public void validOnUpdate(StorageUpdateDto updateDto) throws ValidationException {
 
+        if ( Objects.isNull(updateDto.getName()) || Objects.isNull(updateDto.getLatitude())
+                || Objects.isNull(updateDto.getLongitude()) || Objects.isNull(updateDto.getOrganization_id())
+                || Objects.isNull(updateDto.getId()) ){
+            throw new ValidationException("SOMETHING_WANT_WRONG_PLEASE_ENTER_DATA_IN_FULL");
+        }
+
     }
 }
