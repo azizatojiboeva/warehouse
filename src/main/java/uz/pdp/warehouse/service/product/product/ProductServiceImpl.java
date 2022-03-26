@@ -1,5 +1,7 @@
 package uz.pdp.warehouse.service.product.product;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.criteria.product.product.ProductCriteria;
@@ -8,6 +10,7 @@ import uz.pdp.warehouse.dto.product.product.ProductCreateDto;
 import uz.pdp.warehouse.dto.product.product.ProductDto;
 import uz.pdp.warehouse.dto.product.product.ProductUpdateDto;
 import uz.pdp.warehouse.entity.product.Product;
+import uz.pdp.warehouse.entity.transaction.TransactionElement;
 import uz.pdp.warehouse.mapper.product.ProductMapper;
 import uz.pdp.warehouse.repository.product.ProductRepository;
 import uz.pdp.warehouse.response.AppErrorDto;
@@ -101,18 +104,21 @@ public class ProductServiceImpl extends AbstractService<ProductRepository, Produ
 
     @Override
     public ResponseEntity<DataDto<List<ProductDto>>> getAll(ProductCriteria criteria) {
-        // todo getAll with Criteria
-        return null;
+        Pageable pageable= PageRequest.of(criteria.getPage(), criteria.getSize());
+        List<Product> all = repository.findAll(pageable).getContent();
+        List<ProductDto> productDtos = mapper.toDto(all);
+        return new ResponseEntity<>(new DataDto(productDtos, (long) productDtos.size()));
     }
-//TODO getALL funcsiyasini getAll with criteriaga o'tkazish kerak
+
 
     @Override
     public ResponseEntity<DataDto<List<ProductDto>>> getAll() {
-        List<Product> allProducts = repository.getAllAndNotDeleted();
-        if (Objects.isNull(allProducts))
-            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
-        List<ProductDto> allProductDtos = mapper.toDto(allProducts);
-        return new ResponseEntity<>(new DataDto<>(allProductDtos));
+//        List<Product> allProducts = repository.getAllAndNotDeleted();
+//        if (Objects.isNull(allProducts))
+//            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
+//        List<ProductDto> allProductDtos = mapper.toDto(allProducts);
+//        return new ResponseEntity<>(new DataDto<>(allProductDtos));
+        return null;
     }
 
     private AppErrorDto checkFields(List<CategoryDto> categories) {
