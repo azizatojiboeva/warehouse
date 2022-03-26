@@ -28,7 +28,9 @@ public class TransactionServiceImpl
 
     protected TransactionServiceImpl(TransactionMapper mapper,
                                      TransactionValidator validator,
-                                     TransactionRepository repository, MarketCheckService marketCheckService, TransactionCheckService transactionCheckService) {
+                                     TransactionRepository repository,
+                                     MarketCheckService marketCheckService,
+                                     TransactionCheckService transactionCheckService) {
         super(mapper, validator, repository);
         this.marketCheckService = marketCheckService;
         this.transactionCheckService = transactionCheckService;

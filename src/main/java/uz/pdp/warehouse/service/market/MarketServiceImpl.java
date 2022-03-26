@@ -8,15 +8,14 @@ import uz.pdp.warehouse.criteria.market.MarketCriteria;
 import uz.pdp.warehouse.dto.market.MarketCreateDto;
 import uz.pdp.warehouse.dto.market.MarketDto;
 import uz.pdp.warehouse.dto.market.MarketUpdateDto;
-import uz.pdp.warehouse.dto.product.product.ProductDto;
 import uz.pdp.warehouse.entity.market.Market;
-import uz.pdp.warehouse.entity.product.Product;
 import uz.pdp.warehouse.mapper.market.MarketMapper;
 import uz.pdp.warehouse.repository.market.MarketRepository;
 import uz.pdp.warehouse.response.AppErrorDto;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.base.AbstractService;
+import uz.pdp.warehouse.service.district.DistrictCheckService;
 import uz.pdp.warehouse.validator.market.MarketValidator;
 
 import java.util.List;
@@ -29,16 +28,23 @@ import java.util.UUID;
  */
 @Service
 public class MarketServiceImpl extends AbstractService<MarketRepository, MarketMapper, MarketValidator> implements MarketService {
-    private final MarketCheckService marketCheckService;
 
-    protected MarketServiceImpl(MarketMapper mapper, MarketValidator validator, MarketRepository repository, MarketCheckService marketCheckService) {
+    private final MarketCheckService marketCheckService;
+    private final DistrictCheckService districtCheckService;
+
+    protected MarketServiceImpl(MarketMapper mapper,
+                                MarketValidator validator,
+                                MarketRepository repository,
+                                MarketCheckService marketCheckService, DistrictCheckService districtCheckService) {
         super(mapper, validator, repository);
         this.marketCheckService = marketCheckService;
+        this.districtCheckService = districtCheckService;
     }
 
     @Override
     public ResponseEntity<DataDto<Long>> create(MarketCreateDto createDto) {
         validator.validOnCreate(createDto);
+        districtCheckService.checkForDistrictExistence(createDto.getDistrict_id());
         Market market = mapper.fromCreateDto(createDto);
         Market save = repository.save(market);
         return new ResponseEntity<>(new DataDto<>(save.getId()));
@@ -49,10 +55,20 @@ public class MarketServiceImpl extends AbstractService<MarketRepository, MarketM
         validator.validateKey(id);
         UUID uuid = UUID.randomUUID();
         repository.deleteSoft(id, uuid.toString());
-        boolean bool = repository.deleteSoft(id, String.valueOf(uuid));
-        if (bool)
-            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Successfully deleted").status(HttpStatus.OK).build()));
-        return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder().message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
+        boolean isSuccess = repository.deleteSoft(id, String.valueOf(uuid));
+        if (isSuccess)
+            return new ResponseEntity<>(
+                    new DataDto<>(
+                            AppErrorDto.builder()
+                                    .message("Successfully deleted")
+                                    .status(HttpStatus.OK)
+                                    .build()));
+        return new ResponseEntity<>(
+                new DataDto<>(
+                        AppErrorDto.builder()
+                                .message("Bad Request")
+                                .status(HttpStatus.BAD_REQUEST)
+                                .build()));
     }
 
     @Override
@@ -72,10 +88,10 @@ public class MarketServiceImpl extends AbstractService<MarketRepository, MarketM
     public ResponseEntity<DataDto<MarketDto>> get(Long id) {
         validator.validateKey(id);
         marketCheckService.checkMarketExistence(id);
-        Optional<Market> byId = repository.getByIdAndNotDeleted(id);
-        if (byId.isEmpty()) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
+        Optional<Market> marketOptional = repository.getByIdAndNotDeleted(id);
+        if (marketOptional.isEmpty()) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
                 .message("market not found").status(HttpStatus.NOT_FOUND).build()), HttpStatus.OK);
-        Market market = byId.get();
+        Market market = marketOptional.get();
         MarketDto marketDto = mapper.toDto(market);
         return new ResponseEntity<>(new DataDto<>(marketDto), HttpStatus.OK);
     }

@@ -12,12 +12,7 @@ import uz.pdp.warehouse.dto.base.GenericDto;
 @Setter
 public class MarketUpdateDto extends GenericDto {
 
-
     private String name;
-
-    private Double latitude;
-
-    private Double longitude;
 
     private Double credit;
 

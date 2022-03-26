@@ -6,7 +6,6 @@ import uz.pdp.warehouse.criteria.organization.OrganizationCriteria;
 import uz.pdp.warehouse.dto.transaction.TransactionCreateDto;
 import uz.pdp.warehouse.dto.transaction.TransactionUpdateDto;
 import uz.pdp.warehouse.dto.transaction.transactionElement.TransactionDto;
-import uz.pdp.warehouse.dto.transaction.transactionElement.TransactionElementUpdateDto;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.transaction.transaction.TransactionService;

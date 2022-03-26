@@ -27,7 +27,9 @@ import java.util.UUID;
 public class DistrictServiceImpl extends AbstractService<DistrictRepository, DistrictMapper, DistrictValidator> implements DistrictService {
 
 
-    protected DistrictServiceImpl(DistrictMapper mapper, DistrictValidator validator, DistrictRepository repository) {
+    protected DistrictServiceImpl(DistrictMapper mapper,
+                                  DistrictValidator validator,
+                                  DistrictRepository repository) {
         super(mapper, validator, repository);
     }
 
@@ -44,7 +46,7 @@ public class DistrictServiceImpl extends AbstractService<DistrictRepository, Dis
         validator.validateKey(id);
         UUID uuid = UUID.randomUUID();
         repository.deleteSoft(id, uuid.toString());
-        return null;
+        return new ResponseEntity<>(new DataDto<>(null));
     }
 
     @Override

@@ -5,7 +5,7 @@ import uz.pdp.warehouse.entity.market.Market;
 import uz.pdp.warehouse.exception.market.MarketCheckException;
 import uz.pdp.warehouse.repository.market.MarketRepository;
 
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class MarketCheckService {
@@ -18,7 +18,7 @@ public class MarketCheckService {
 
     public void checkMarketExistence(Long marketId) {
         Optional<Market> byId = repository.findById(marketId);
-        if (!byId.isPresent()){
+        if (byId.isEmpty()){
             throw new MarketCheckException("INVALID_ID");
         }
     }

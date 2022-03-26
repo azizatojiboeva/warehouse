@@ -78,7 +78,6 @@ public class StorageServiceImpl extends AbstractService<StorageRepository, Stora
         storageCheckService.checkStoreExists(id);
         Storage storage = repository.getByIdAndNotDeleted(id);
         StorageDto storageDto = mapper.toDto(storage);
-
         return new ResponseEntity<>(new DataDto<>(storageDto), HttpStatus.OK);
     }
 
