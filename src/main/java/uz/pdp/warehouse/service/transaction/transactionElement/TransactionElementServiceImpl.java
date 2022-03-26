@@ -99,4 +99,3 @@ public class TransactionElementServiceImpl
         return new ResponseEntity<>(new DataDto<>(null));
     }
 }
-

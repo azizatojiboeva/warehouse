@@ -1,11 +1,15 @@
 package uz.pdp.warehouse.service.storage;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.criteria.storage.StorageCriteria;
+import uz.pdp.warehouse.dto.product.product.ProductDto;
 import uz.pdp.warehouse.dto.storage.StorageCreateDto;
 import uz.pdp.warehouse.dto.storage.StorageDto;
 import uz.pdp.warehouse.dto.storage.StorageUpdateDto;
+import uz.pdp.warehouse.entity.product.Product;
 import uz.pdp.warehouse.entity.storage.Storage;
 import uz.pdp.warehouse.mapper.storage.StorageMapper;
 import uz.pdp.warehouse.repository.storage.StorageRepository;
@@ -84,19 +88,23 @@ public class StorageServiceImpl extends AbstractService<StorageRepository, Stora
 
     @Override
     public ResponseEntity<DataDto<List<StorageDto>>> getAll(StorageCriteria criteria) {
-        return null;
+        Pageable pageable= PageRequest.of(criteria.getPage(), criteria.getSize());
+        List<Storage> all = repository.findAll(pageable).getContent();
+        List<StorageDto> storageDtos = mapper.toDto(all);
+        return new ResponseEntity<>(new DataDto(storageDtos, (long) storageDtos.size()));
     }
 
-    //TODO getALL funcsiyasini getAll with criteriaga o'tkazish kerak
+
     @Override
     public ResponseEntity<DataDto<List<StorageDto>>> getAll() {
-        List<Storage> storages = repository.getAllAndNotDeleted();
-        if (Objects.isNull(storages)) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
-                .message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
-
-        List<StorageDto> storageDtos = mapper.toDto(storages);
-
-        return new ResponseEntity<>(new DataDto<>(storageDtos));
+//        List<Storage> storages = repository.getAllAndNotDeleted();
+//        if (Objects.isNull(storages)) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
+//                .message("Bad Request").status(HttpStatus.BAD_REQUEST).build()));
+//
+//        List<StorageDto> storageDtos = mapper.toDto(storages);
+//
+//        return new ResponseEntity<>(new DataDto<>(storageDtos));
+        return null;
     }
 
 
