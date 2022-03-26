@@ -8,7 +8,6 @@ import uz.pdp.warehouse.exception.validation.ValidationException;
 import uz.pdp.warehouse.validator.base.AbstractValidator;
 
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Objects;
 
 @Service
