@@ -8,6 +8,7 @@ import uz.pdp.warehouse.dto.product.category.CategoryDto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -23,20 +24,11 @@ public class ProductDto extends GenericDto {
     public LocalDate expiryDate;
     public LocalDate producedDate;
     public List<CategoryDto> category;
+    public UUID partyNumber;
 
     @Builder(builderMethodName = "childBuilder")
 
-    public ProductDto(Long id,
-                      String name,
-                      String description,
-                      Double initialPrice,
-                      Double sellingPrice,
-                      Integer softCount,
-                      Integer realCount,
-                      String madeBy,
-                      LocalDate expiryDate,
-                      LocalDate producedDate,
-                      List<CategoryDto> category) {
+    public ProductDto(Long id, String name, String description, Double initialPrice, Double sellingPrice, Integer softCount, Integer realCount, String madeBy, LocalDate expiryDate, LocalDate producedDate, List<CategoryDto> category, UUID partyNumber) {
         super(id);
         this.name = name;
         this.description = description;
@@ -48,5 +40,6 @@ public class ProductDto extends GenericDto {
         this.expiryDate = expiryDate;
         this.producedDate = producedDate;
         this.category = category;
+        this.partyNumber = partyNumber;
     }
 }

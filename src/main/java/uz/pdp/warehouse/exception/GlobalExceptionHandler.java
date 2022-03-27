@@ -11,9 +11,7 @@ import uz.pdp.warehouse.response.AppErrorDto;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 
-/**
- * @Author Aziza Tojiboyeva
- */
+
 @ControllerAdvice("uz.pdp.warehouse")
 public class GlobalExceptionHandler {
 

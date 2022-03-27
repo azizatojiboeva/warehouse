@@ -1,9 +1,13 @@
 package uz.pdp.warehouse.service.product.product;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.entity.product.Product;
 import uz.pdp.warehouse.exception.NotFoundException;
 import uz.pdp.warehouse.repository.product.ProductRepository;
+import uz.pdp.warehouse.response.AppErrorDto;
+import uz.pdp.warehouse.response.DataDto;
+import uz.pdp.warehouse.response.ResponseEntity;
 
 import java.util.Optional;
 
@@ -15,14 +19,26 @@ public class ProductCheckService {
         this.repository = repository;
     }
 
-    public void checkProductExistence(Long productId) {
-        Optional<Product> byId = repository.findById(productId);
-        checkProductExistence(byId);
+    public AppErrorDto  checkProductExistence(Long productId) {
+            Optional<Product> byId = repository.findById(productId);
+
+
+        if (byId.isEmpty()) {
+            return AppErrorDto.builder()
+                    .message("PRODUCT_NOT_FOUND")
+                    .status(HttpStatus.NOT_FOUND)
+                    .build();
+        }
+        return  null;
     }
 
-    public void checkProductExistence(Optional<Product> product) {
+    public AppErrorDto checkProductExistence(Optional<Product> product) {
         if (product.isEmpty()) {
-            throw new NotFoundException("PRODUCT_NOT_FOUND");
+            return AppErrorDto.builder()
+                    .message("PRODUCT_NOT_FOUND")
+                    .build();
+//            throw new NotFoundException("PRODUCT_NOT_FOUND");
         }
+        return  null;
     }
 }

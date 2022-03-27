@@ -92,7 +92,8 @@ public class ProductServiceImpl extends AbstractService<ProductRepository, Produ
     @Override
     public ResponseEntity<DataDto<ProductDto>> get(Long id) {
 
-        productCheckService.checkProductExistence(id);
+       AppErrorDto errorChek = productCheckService.checkProductExistence(id);
+       if(Objects.nonNull(errorChek)) return new ResponseEntity<>(new DataDto<>(errorChek));
         Optional<Product> byId = repository.getByIdAndNotDeleted(id);
         if (byId.isEmpty()) return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
                 .message("User not found").status(HttpStatus.NOT_FOUND).build()), HttpStatus.OK);

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 
 @Setter
@@ -38,15 +39,14 @@ public class Product extends Auditable {
 
     private LocalDate producedDate;
 
+    private UUID partyNumber;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private List<Category> category;
 
     @Builder(builderMethodName = "childBuilder")
-    public Product(Long id, Long createdBy, Long updatedBy, LocalDateTime createdAt,
-                   LocalDateTime updatedAt, boolean deleted, String name, String description, Double initialPrice, Double sellingPrice, Integer softCount,
-                   Integer realCount, String madeBy, LocalDate expiryDate,
-                   LocalDate producedDate, List<Category> category) {
+    public Product(Long id, Long createdBy, Long updatedBy, LocalDateTime createdAt, LocalDateTime updatedAt, boolean deleted, String name, String description, Double initialPrice, Double sellingPrice, Integer softCount, Integer realCount, String madeBy, LocalDate expiryDate, LocalDate producedDate, UUID partyNumber, List<Category> category) {
         super(id, createdBy, updatedBy, createdAt, updatedAt, deleted);
         this.name = name;
         this.description = description;
@@ -57,6 +57,7 @@ public class Product extends Auditable {
         this.madeBy = madeBy;
         this.expiryDate = expiryDate;
         this.producedDate = producedDate;
+        this.partyNumber = partyNumber;
         this.category = category;
     }
 }

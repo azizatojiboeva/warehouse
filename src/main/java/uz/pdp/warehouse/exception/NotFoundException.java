@@ -13,7 +13,7 @@ public class NotFoundException extends RuntimeException {
     @Override
 
     public synchronized Throwable fillInStackTrace() {
-        return this;
+        return null;
     }
 
 }
