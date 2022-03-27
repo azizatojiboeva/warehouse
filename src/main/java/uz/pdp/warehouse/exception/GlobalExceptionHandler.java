@@ -17,15 +17,17 @@ import uz.pdp.warehouse.response.ResponseEntity;
 @ControllerAdvice("uz.pdp.warehouse")
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler({RuntimeException.class})
-//    public ResponseEntity<DataDto<AppError>> handle500(RuntimeException e, WebRequest webRequest) {
-//        return new ResponseEntity<>(
-//                new DataDto<>(AppErrorDto.builder()
-//                        .message(e.getMessage())
-//                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                        .path(webRequest.getContextPath())
-//                        .build()));
-//    }
+    @ExceptionHandler({RuntimeException.class})
+    public ResponseEntity<DataDto<AppError>> handle500(RuntimeException e, WebRequest webRequest) {
+        return new ResponseEntity<>(
+                new DataDto<>(AppErrorDto.builder()
+                        .message(e.getMessage())
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .path(webRequest.getContextPath())
+                        .build()));
+
+
+    }
 
     @ExceptionHandler({ValidationException.class, IllegalArgumentException.class})
     public ResponseEntity<DataDto<AppErrorDto>> handleValidation(ValidationException e, WebRequest webRequest) {
