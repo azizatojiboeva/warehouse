@@ -11,6 +11,7 @@ import uz.pdp.warehouse.validator.base.AbstractValidator;
  */
 @Component
 public class AuthUserValidator extends AbstractValidator<UserCreateDto, UserUpdateDto, Long> {
+
     @Override
     public void validateKey(Long id) throws ValidationException {
 

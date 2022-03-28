@@ -186,7 +186,9 @@ public class AuthUserServiceImpl extends
         }
     }
 
-    public ResponseEntity<DataDto<SessionDto>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<DataDto<SessionDto>> refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response) {
         return null;
     }
 }
