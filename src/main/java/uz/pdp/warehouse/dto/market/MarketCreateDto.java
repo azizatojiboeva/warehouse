@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.pdp.warehouse.dto.base.BaseGenericDto;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author Axmadjonov Eliboy, Fri 12:05 AM,3/18/2022
  */
@@ -11,7 +13,7 @@ import uz.pdp.warehouse.dto.base.BaseGenericDto;
 @Getter
 @Setter
 public class MarketCreateDto implements BaseGenericDto {
-
+@NotNull
     private String name;
 
     private Double latitude;
