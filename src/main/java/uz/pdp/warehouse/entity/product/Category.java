@@ -28,8 +28,8 @@ public class Category extends Auditable {
 
     @Builder(builderMethodName = "childBuilder")
     public Category(Long id, Long createdBy, Long updatedBy, LocalDateTime createdAt,
-                    LocalDateTime updatedAt, boolean deleted, String name, String code, Category parentCategory) {
-        super(id, createdBy, updatedBy, createdAt, updatedAt, deleted);
+                    LocalDateTime updatedAt, boolean deleted, boolean blocked, boolean active, String name, String code, Category parentCategory) {
+        super(id, createdBy, updatedBy, createdAt, updatedAt, deleted, blocked, active);
         this.name = name;
         this.code = code;
         this.parentCategory = parentCategory;

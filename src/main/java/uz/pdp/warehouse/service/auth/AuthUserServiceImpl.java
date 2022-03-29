@@ -2,6 +2,7 @@ package uz.pdp.warehouse.service.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.bytebuddy.utility.RandomString;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -19,6 +20,7 @@ import uz.pdp.warehouse.criteria.auth.user.UserCriteria;
 import uz.pdp.warehouse.dto.auth.*;
 import uz.pdp.warehouse.entity.auth.AuthRole;
 import uz.pdp.warehouse.entity.auth.AuthUser;
+import uz.pdp.warehouse.entity.base.AuditAwareImpl;
 import uz.pdp.warehouse.exception.NotFoundException;
 import uz.pdp.warehouse.exception.UserNotFoundException;
 import uz.pdp.warehouse.mapper.auth.AuthUserMapper;
@@ -52,28 +54,37 @@ public class AuthUserServiceImpl extends
     private final PasswordEncoderConfigurer passwordEncoder;
     private final AuthRoleRepository authRoleRepository;
     private final ObjectMapper objectMapper;
+    private final AuditAwareImpl auditAware;
 
     protected AuthUserServiceImpl(
             AuthUserMapper mapper,
             AuthUserValidator validator,
             AuthUserRepository repository,
-            PasswordEncoderConfigurer passwordEncoder, AuthRoleRepository authRoleRepository, ObjectMapper objectMapper) {
+            PasswordEncoderConfigurer passwordEncoder, AuthRoleRepository authRoleRepository, ObjectMapper objectMapper, AuditAwareImpl auditAware) {
         super(mapper, validator, repository);
         this.passwordEncoder = passwordEncoder;
         this.authRoleRepository = authRoleRepository;
         this.objectMapper = objectMapper;
+        this.auditAware = auditAware;
     }
 
     @Override
     public ResponseEntity<DataDto<Long>> create(UserCreateDto createDto) {
         // TODO: 3/18/2022 there should be validation, checks if this user already exist in database, have all required fields
-
         AuthRole user = authRoleRepository.findByCode("USER");
         AuthUser authUser = mapper.fromCreateDto(createDto);
         authUser.setPassword(passwordEncoder.passwordEncoder().encode(createDto.getPassword()));
         authUser.setRole(user);
+        authUser.setCreatedBy(auditAware.getCurrentAuditor().get());
+        authUser.setVerificationCode(RandomString.make(64));
+        authUser.setActive(false);
+        authUser.setOrganizationId(-1L);
         repository.save(authUser);
         return new ResponseEntity<>(new DataDto<>(authUser.getId()));
+    }
+
+    public ResponseEntity<DataDto<Boolean>>verify(String email){
+        return  null;
     }
 
     @Override
@@ -96,6 +107,7 @@ public class AuthUserServiceImpl extends
         authUser.setPhoneNumber(updateDto.getPhoneNumber());
         authUser.setEmail(updateDto.getEmail());
         authUser.setFullName(updateDto.getFullName());
+        authUser.setUpdatedBy(auditAware.getCurrentAuditor().get());
         repository.save(authUser);
         return new ResponseEntity<>(new DataDto<>(true));
     }
@@ -130,7 +142,7 @@ public class AuthUserServiceImpl extends
         return new ResponseEntity<>(new DataDto<>(userDtos));
     }
 
-    public ResponseEntity<DataDto<Void>> resetPassword(PasswordDto dto) {
+    public void resetPassword(PasswordDto dto) {
         Optional<AuthUser> user = repository.findById(dto.getId());
         if (user.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -139,7 +151,6 @@ public class AuthUserServiceImpl extends
             throw new RuntimeException("Password doesn't match.");
         }
         repository.resetPassword(passwordEncoder.passwordEncoder().encode(dto.getNewPassword()), dto.getId());
-        return new ResponseEntity<>(new DataDto<>(null));
     }
 
     @Override

@@ -21,6 +21,11 @@ public class AuthUser extends Auditable {
 
     private String email;
 
+    @Column(name = "organization_id")
+    private Long organizationId;
+
+    private String verificationCode;
+
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.DETACH,fetch = FetchType.EAGER)

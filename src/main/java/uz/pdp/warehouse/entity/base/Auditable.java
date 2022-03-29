@@ -16,8 +16,8 @@ import java.lang.Long;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @MappedSuperclass
@@ -48,5 +48,11 @@ public class Auditable implements BaseEntity {
 
     @Column(name = "is_deleted", columnDefinition = "BOOLEAN default false")
     private boolean deleted;
+
+    @Column(name = "is_blocked", columnDefinition = "BOOLEAN default false")
+    private boolean blocked;
+
+    @Column(name = "is_active", columnDefinition = "BOOLEAN default false")
+    private boolean active;
 
 }

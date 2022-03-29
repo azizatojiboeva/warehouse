@@ -54,6 +54,18 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
         return service.create(createDto);
     }
 
+    @RequestMapping(value = "/verify", method = RequestMethod.GET)
+    public ResponseEntity<DataDto<Boolean>> verifyUser(@RequestParam(name = "email") String email){
+       return service.verify(email);
+    }
+
+    @RequestMapping(value = "/sendVerification", method = RequestMethod.GET)
+    public ResponseEntity<DataDto<Boolean>> sendVerificationCode(@RequestParam(name = "email") String email,
+                                                                 @RequestParam(name = "url") String url){
+
+        return null;
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<DataDto<Void>> delete(@PathVariable(name = "id") Long id) {
         service.delete(id);

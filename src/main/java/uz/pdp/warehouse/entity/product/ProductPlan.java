@@ -28,9 +28,9 @@ public class ProductPlan extends Auditable {
 
     @Builder(builderMethodName = "childBuilder")
     public ProductPlan(Long id, Long createdBy, Long updatedBy, LocalDateTime createdAt,
-                       LocalDateTime updatedAt, boolean deleted, Long agentId,
+                       LocalDateTime updatedAt, boolean deleted, boolean blocked, boolean active, Long agentId,
                        Product products, Integer count, LocalDate period) {
-        super(id, createdBy, updatedBy, createdAt, updatedAt, deleted);
+        super(id, createdBy, updatedBy, createdAt, updatedAt, deleted, blocked,active );
         this.agentId = agentId;
         this.products = products;
         this.count = count;

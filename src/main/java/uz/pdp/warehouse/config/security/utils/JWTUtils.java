@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class JWTUtils {
     public static Integer expiry = 1800000000;
-    public static String secret = "SDSRTED34JNBNJ@@*&p45kbNBKRIIHB@456#$%&f%&t#sxyASX345";
+    public static String secret = "SD784SRTED34JNBNJ@@*&p45kbNBKRIIHB@456#$%&f%&t#sxyASX345";
 
     public static Date getExpiry() {
         return new Date(System.currentTimeMillis() + expiry);
