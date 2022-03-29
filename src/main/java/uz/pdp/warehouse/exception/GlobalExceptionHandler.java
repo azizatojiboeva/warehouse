@@ -16,7 +16,7 @@ import uz.pdp.warehouse.response.ResponseEntity;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({RuntimeException.class})
-    public ResponseEntity<DataDto<AppError>> handle500(RuntimeException e, WebRequest webRequest) {
+    public ResponseEntity<DataDto<AppError>> handleInternal(RuntimeException e, WebRequest webRequest) {
         return new ResponseEntity<>(
                 new DataDto<>(AppErrorDto.builder()
                         .message(e.getMessage())
@@ -27,24 +27,45 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ExceptionHandler({ValidationException.class, IllegalArgumentException.class})
-    public ResponseEntity<DataDto<AppErrorDto>> handleValidation(ValidationException e, WebRequest webRequest) {
-        return new ResponseEntity<>(
-                new DataDto<>(AppErrorDto.builder()
-                        .message(e.getMessage())
-                        .status(HttpStatus.BAD_REQUEST)
-                        .path(webRequest.getContextPath())
-                        .build()));
+    @ExceptionHandler({ValidationException.class})
+    public org.springframework.http.ResponseEntity<DataDto<AppErrorDto>> handleValidation(ValidationException e, WebRequest webRequest) {
+        return new org.springframework.http.ResponseEntity<>(
+                new DataDto(
+                        AppErrorDto.builder()
+                                .message(e.getMessage())
+                                .status(HttpStatus.NOT_FOUND)
+                                .path(webRequest.getContextPath())
+                                .build()),
+                HttpStatus.OK);
+    }
+
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public org.springframework.http.ResponseEntity<DataDto<AppErrorDto>> handleIllegalArgument(IllegalArgumentException e, WebRequest webRequest) {
+        return new org.springframework.http.ResponseEntity<>(
+                new DataDto(
+                        AppErrorDto.builder()
+                                .message(e.getMessage())
+                                .status(HttpStatus.NOT_FOUND)
+                                .path(webRequest.getContextPath())
+                                .build()), HttpStatus.OK);
     }
 
     @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<DataDto<AppErrorDto>> handleNotFound(NotFoundException e, WebRequest webRequest) {
-        return new ResponseEntity<>(
-                new DataDto<>(AppErrorDto.builder()
-                        .message(e.getMessage())
-                        .status(HttpStatus.NOT_FOUND)
-                        .path(webRequest.getContextPath())
-                        .build()));
+    public org.springframework.http.ResponseEntity<DataDto<AppErrorDto>> handleNotFound(NotFoundException e, WebRequest webRequest) {
+//        return new ResponseEntity<>(
+//                new DataDto<>(AppErrorDto.builder()
+//                        .message(e.getMessage())
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .path(webRequest.getContextPath())
+//                        .build()));
+        return new org.springframework.http.ResponseEntity<>(
+                new DataDto(
+                        AppErrorDto.builder()
+                                .message(e.getMessage())
+                                .status(HttpStatus.NOT_FOUND)
+                                .path(webRequest.getContextPath())
+                                .build()), HttpStatus.OK);
     }
 
 
