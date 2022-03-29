@@ -10,6 +10,9 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -75,7 +78,8 @@ public class AuthUserServiceImpl extends
         AuthUser authUser = mapper.fromCreateDto(createDto);
         authUser.setPassword(passwordEncoder.passwordEncoder().encode(createDto.getPassword()));
         authUser.setRole(user);
-        authUser.setCreatedBy(auditAware.getCurrentAuditor().get());
+        //   authUser.setCreatedBy(auditAware.getCurrentAuditor().get());
+
         authUser.setVerificationCode(RandomString.make(64));
         authUser.setActive(false);
         authUser.setOrganizationId(-1L);
@@ -107,7 +111,7 @@ public class AuthUserServiceImpl extends
         authUser.setPhoneNumber(updateDto.getPhoneNumber());
         authUser.setEmail(updateDto.getEmail());
         authUser.setFullName(updateDto.getFullName());
-        authUser.setUpdatedBy(auditAware.getCurrentAuditor().get());
+       // authUser.setUpdatedBy(auditAware.getCurrentAuditor().get());
         repository.save(authUser);
         return new ResponseEntity<>(new DataDto<>(true));
     }

@@ -13,7 +13,8 @@ import java.util.Optional;
 public class AuditAwareImpl implements AuditorAware<Long> {
     @Override
     public Optional<Long> getCurrentAuditor() {
-        CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUserDetails principal =
+                (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return Optional.of(principal.getId());
     }
 

@@ -57,7 +57,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException, IOException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                            Authentication authentication) throws IOException, ServletException, IOException {
         User user = (User) authentication.getPrincipal();
         Date expiryForAccessToken = JWTUtils.getExpiry();
         Date expiryForRefreshToken = JWTUtils.getExpiryForRefreshToken();
