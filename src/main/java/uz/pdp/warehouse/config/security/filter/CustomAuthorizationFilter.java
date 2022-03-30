@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import uz.pdp.warehouse.config.security.utils.JWTUtils;
+import uz.pdp.warehouse.entity.base.Principal;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -34,10 +35,13 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     String token = authorizationHeader.substring("Bearer ".length());
                     DecodedJWT decodedJWT = JWTUtils.getVerifier().verify(token);
                     String username = decodedJWT.getSubject();
+                    Long id = decodedJWT.getClaim("id").asLong();
+                    Boolean active = decodedJWT.getClaim("active").asBoolean();
+                    Boolean blocked = decodedJWT.getClaim("blocked").asBoolean();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     Arrays.stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(new Principal(id,username,active, blocked), null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
                 } catch (Exception exception) {

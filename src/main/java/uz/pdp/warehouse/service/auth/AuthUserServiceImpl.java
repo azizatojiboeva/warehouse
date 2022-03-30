@@ -10,10 +10,8 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +21,8 @@ import uz.pdp.warehouse.criteria.auth.user.UserCriteria;
 import uz.pdp.warehouse.dto.auth.*;
 import uz.pdp.warehouse.entity.auth.AuthRole;
 import uz.pdp.warehouse.entity.auth.AuthUser;
-import uz.pdp.warehouse.entity.base.AuditAwareImpl;
+import uz.pdp.warehouse.entity.base.CustomUserDetails;
+import uz.pdp.warehouse.entity.base.Principal;
 import uz.pdp.warehouse.exception.NotFoundException;
 import uz.pdp.warehouse.exception.UserNotFoundException;
 import uz.pdp.warehouse.mapper.auth.AuthUserMapper;
@@ -57,18 +56,18 @@ public class AuthUserServiceImpl extends
     private final PasswordEncoderConfigurer passwordEncoder;
     private final AuthRoleRepository authRoleRepository;
     private final ObjectMapper objectMapper;
-    private final AuditAwareImpl auditAware;
+
 
     protected AuthUserServiceImpl(
             AuthUserMapper mapper,
             AuthUserValidator validator,
             AuthUserRepository repository,
-            PasswordEncoderConfigurer passwordEncoder, AuthRoleRepository authRoleRepository, ObjectMapper objectMapper, AuditAwareImpl auditAware) {
+            PasswordEncoderConfigurer passwordEncoder, AuthRoleRepository authRoleRepository, ObjectMapper objectMapper) {
         super(mapper, validator, repository);
         this.passwordEncoder = passwordEncoder;
         this.authRoleRepository = authRoleRepository;
         this.objectMapper = objectMapper;
-        this.auditAware = auditAware;
+
     }
 
     @Override
@@ -78,8 +77,8 @@ public class AuthUserServiceImpl extends
         AuthUser authUser = mapper.fromCreateDto(createDto);
         authUser.setPassword(passwordEncoder.passwordEncoder().encode(createDto.getPassword()));
         authUser.setRole(user);
-        //   authUser.setCreatedBy(auditAware.getCurrentAuditor().get());
-
+        Principal principal = (Principal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        authUser.setCreatedBy(principal.getId());
         authUser.setVerificationCode(RandomString.make(64));
         authUser.setActive(false);
         authUser.setOrganizationId(-1L);
@@ -111,7 +110,8 @@ public class AuthUserServiceImpl extends
         authUser.setPhoneNumber(updateDto.getPhoneNumber());
         authUser.setEmail(updateDto.getEmail());
         authUser.setFullName(updateDto.getFullName());
-       // authUser.setUpdatedBy(auditAware.getCurrentAuditor().get());
+        Principal principal = (Principal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        authUser.setUpdatedBy(principal.getId());
         repository.save(authUser);
         return new ResponseEntity<>(new DataDto<>(true));
     }
@@ -160,15 +160,7 @@ public class AuthUserServiceImpl extends
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AuthUser user = repository.findByEmail(email);
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .credentialsExpired(false)
-                .accountExpired(false)
-                .accountLocked(false)
-                .disabled(false)
-                .authorities(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
-                .build();
+        return new CustomUserDetails(user);
     }
 
     public ResponseEntity<DataDto<SessionDto>> getToken(LoginDto dto) {

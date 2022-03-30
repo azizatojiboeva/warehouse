@@ -16,12 +16,11 @@ import java.util.Set;
 /**
  * @Author Aziza Tojiboyeva
  */
-@Setter
+
 @Getter
 public class CustomUserDetails implements UserDetails {
-    @Getter
+
     private Long id;
-    @Getter
     private AuthRole role;
     private String email;
     private String password;
@@ -35,8 +34,8 @@ public class CustomUserDetails implements UserDetails {
         this.role = user.getRole();
         this.email = user.getEmail();
         this.password = user.getPassword();
-        /*this.blocked = user.isBlocked();
-        this.active = user.isActive();*/
+        this.blocked = user.isBlocked();
+        this.active = user.isActive();
         processAuthorities(user);
     }
 
@@ -44,7 +43,6 @@ public class CustomUserDetails implements UserDetails {
     private void processAuthorities(AuthUser user) {
         authorities = new HashSet<>();
         AuthRole role = user.getRole();
-
         if (Objects.isNull(role)) return;
         authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getCode()));
         if (Objects.isNull(role.getPermissions())) return;
@@ -69,21 +67,21 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.active;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.blocked;
+        return !this.blocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.active;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return !this.active;
     }
 }

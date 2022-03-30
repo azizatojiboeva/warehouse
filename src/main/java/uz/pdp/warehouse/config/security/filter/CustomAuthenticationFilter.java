@@ -12,10 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import uz.pdp.warehouse.config.security.utils.JWTUtils;
 import uz.pdp.warehouse.dto.auth.LoginDto;
 import uz.pdp.warehouse.dto.auth.SessionDto;
+import uz.pdp.warehouse.entity.base.CustomUserDetails;
 import uz.pdp.warehouse.response.AppErrorDto;
 import uz.pdp.warehouse.response.DataDto;
 
@@ -59,7 +61,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authentication) throws IOException, ServletException, IOException {
-        User user = (User) authentication.getPrincipal();
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
         Date expiryForAccessToken = JWTUtils.getExpiry();
         Date expiryForRefreshToken = JWTUtils.getExpiryForRefreshToken();
 
@@ -73,6 +75,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                                 stream().
                                 map(GrantedAuthority::getAuthority).
                                 collect(Collectors.toList()))
+                .withClaim("id", user.getId())
+                .withClaim("active", user.isEnabled())
+                .withClaim("blocked", user.isBlocked())
                 .sign(JWTUtils.getAlgorithm());
 
         String refreshToken = JWT.create()
