@@ -13,7 +13,7 @@ import uz.pdp.warehouse.properties.OpenApiProperties;
 @EnableScheduling
 public class WarehouseApplication {
 
-
+//
 //    private final Init init;
 //
 //    public WarehouseApplication(Init init) {
