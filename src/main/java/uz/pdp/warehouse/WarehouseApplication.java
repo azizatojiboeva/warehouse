@@ -25,7 +25,7 @@ import uz.pdp.warehouse.properties.OpenApiProperties;
 @RequiredArgsConstructor
 public class WarehouseApplication {
 
-
+//
 //    private final Init init;
 //
 //    public WarehouseApplication(Init init) {

@@ -1,8 +1,10 @@
 package uz.pdp.warehouse.entity.auth;
 
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -22,9 +24,8 @@ public class AuthRole {
 
     private String code;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<AuthPermission> permissions;
-
 
 
 }
