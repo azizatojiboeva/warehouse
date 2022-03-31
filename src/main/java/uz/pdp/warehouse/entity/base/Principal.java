@@ -15,6 +15,7 @@ public class Principal implements BaseEntity {
     private String email;
     private boolean active;
     private boolean block;
+    private String role;
 
 
 }
