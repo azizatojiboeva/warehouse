@@ -23,6 +23,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     private final AuthUserServiceImpl userService;
     private final PasswordEncoder passwordEncoder;
+    private final UserAuthenticationEntryPoint userAuthenticationEntryPoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -33,6 +34,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.cors().disable();
+     //   http.exceptionHandling(userAuthenticationEntryPoint);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
                 .antMatchers("/api/login/**",
