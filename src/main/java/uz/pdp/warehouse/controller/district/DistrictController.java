@@ -1,6 +1,7 @@
 package uz.pdp.warehouse.controller.district;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.warehouse.controller.base.AbstractController;
 import uz.pdp.warehouse.dto.district.DistrictCreateDto;
@@ -47,8 +48,10 @@ public class DistrictController extends AbstractController<DistrictService> {
         return service.get(id);
     }
 
+    @PreAuthorize(value ="hasPermission('hassAccess','ALL_DISTRICTS')")
     @GetMapping(value = "list")
     public ResponseEntity<DataDto<List<DistrictDto>>> getAll(){
+        log.info("Get all ");
         return service.getAll();
     }
 
