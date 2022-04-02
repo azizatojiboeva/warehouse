@@ -1,6 +1,7 @@
 package uz.pdp.warehouse.controller.auth;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.warehouse.controller.base.AbstractController;
 import uz.pdp.warehouse.dto.auth.*;
@@ -8,6 +9,7 @@ import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.auth.AuthUserServiceImpl;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 /**
@@ -22,6 +24,7 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
     }
 
     @GetMapping("")
+    @PreAuthorize(value = "hasPermission('hasAccess','ALL_USERS')")
     public ResponseEntity<DataDto<List<UserDto>>> getAll() {
         ResponseEntity<DataDto<List<UserDto>>> users = service.getAll();
         return users;

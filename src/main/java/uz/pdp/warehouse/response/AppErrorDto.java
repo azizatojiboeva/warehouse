@@ -36,4 +36,9 @@ public class AppErrorDto {
         this.message = message;
         this.path = path;
     }
+
+    public AppErrorDto(int scUnauthorized, String message) {
+        this.status=scUnauthorized;
+        this.message=message;
+    }
 }
