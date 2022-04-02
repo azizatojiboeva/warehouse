@@ -1,5 +1,6 @@
 package uz.pdp.warehouse.controller.district;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.warehouse.controller.base.AbstractController;
 import uz.pdp.warehouse.dto.district.DistrictCreateDto;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * @author Axmadjonov Eliboy, Thu 2:04 PM,3/17/2022
  */
-
+@Slf4j
 @RestController
 @RequestMapping("/district/")
 public class DistrictController extends AbstractController<DistrictService> {
@@ -27,6 +28,7 @@ public class DistrictController extends AbstractController<DistrictService> {
 
     @PostMapping(value = "create")
     public ResponseEntity<DataDto<Long>> create(@RequestBody DistrictCreateDto dto) {
+        log.info("DistrictCreate {}", dto);
         return service.create(dto);
     }
 

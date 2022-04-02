@@ -13,7 +13,8 @@ import java.util.List;
 /**
  * @author Axmadjonov Eliboy, Thu 2:06 PM,3/17/2022
  */
-public interface DistrictService extends GenericCrudService<DistrictDto, DistrictCreateDto, DistrictUpdateDto, DistrictCriteria, Long> {
+public interface DistrictService extends
+        GenericCrudService<DistrictDto, DistrictCreateDto, DistrictUpdateDto, DistrictCriteria, Long> {
     @Override
     ResponseEntity<DataDto<Long>> create(DistrictCreateDto createDto);
 
