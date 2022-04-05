@@ -21,24 +21,21 @@ import javax.persistence.ManyToOne;
 public class Rollback extends Auditable {
 
     @ManyToOne
-    private Product rollbackedProductId;
+    private Product rollBackedProductId;
 
     @Column(nullable = false)
-    private Integer rollbackedCount;
+    private Integer productCount;
+
+    @Column(nullable = false)
+    private Double amountMoney;
+
+    @Column(nullable = false)
+    private Long marketId;
 
     @ManyToOne
-    private Product givedProductId;
-
-    @Column(nullable = false)
-    private Integer givedCount;
-
-    @Column(nullable = false)
-    private Long market_id;
+    private Transaction oldTransaction;
 
     @ManyToOne
-    private Transaction transactionId;
-
-
-
+    private Transaction newTransaction;
 
 }

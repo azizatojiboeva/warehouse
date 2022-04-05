@@ -3,6 +3,7 @@ package uz.pdp.warehouse.controller.transaction;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.warehouse.controller.base.AbstractController;
 import uz.pdp.warehouse.criteria.organization.OrganizationCriteria;
+import uz.pdp.warehouse.criteria.transaction.TransactionCriteria;
 import uz.pdp.warehouse.dto.transaction.TransactionCreateDto;
 import uz.pdp.warehouse.dto.transaction.TransactionUpdateDto;
 import uz.pdp.warehouse.dto.transaction.transactionElement.TransactionDto;
@@ -42,7 +43,7 @@ public class TransactionController extends AbstractController<TransactionService
     }
 
     @GetMapping(value = "list")
-    public ResponseEntity<DataDto<List<TransactionDto>>> getAll( OrganizationCriteria criteria) {
+    public ResponseEntity<DataDto<List<TransactionDto>>> getAll( TransactionCriteria criteria) {
         return service.getAll(criteria);
     }
 
