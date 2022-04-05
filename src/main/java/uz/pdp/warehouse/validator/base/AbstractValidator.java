@@ -11,4 +11,20 @@ public abstract class AbstractValidator<CD, UD, K> implements BaseGenericValidat
 
     public abstract void validOnUpdate(UD updateDto) throws ValidationException;
 
+    public boolean isPositive(Double number) {
+        return number > 0;
+    }
+
+    public boolean isPositiveOrZero(Double number) {
+        return number >= 0;
+    }
+
+    public boolean isNegative(Double number) {
+        return number < 0;
+    }
+
+    public boolean isNegativeOrZero(Double number) {
+        return number <= 0;
+    }
+
 }
