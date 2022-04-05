@@ -1,5 +1,7 @@
 package uz.pdp.warehouse.service.auth;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.bytebuddy.utility.RandomString;
@@ -9,14 +11,18 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.pdp.warehouse.config.encryption.PasswordEncoderConfigurer;
+import uz.pdp.warehouse.config.security.utils.JWTUtils;
 import uz.pdp.warehouse.criteria.auth.user.UserCriteria;
 import uz.pdp.warehouse.dto.auth.*;
 import uz.pdp.warehouse.entity.auth.AuthRole;
@@ -38,9 +44,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author Aziza Tojiboyeva
@@ -77,7 +82,7 @@ public class AuthUserServiceImpl extends
         AuthUser authUser = mapper.fromCreateDto(createDto);
         authUser.setPassword(passwordEncoder.passwordEncoder().encode(createDto.getPassword()));
         authUser.setRole(user);
-        Principal principal = (Principal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Principal principal = (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         authUser.setCreatedBy(principal.getId());
         authUser.setVerificationCode(RandomString.make(64));
         authUser.setActive(false);
@@ -86,14 +91,14 @@ public class AuthUserServiceImpl extends
         return new ResponseEntity<>(new DataDto<>(authUser.getId()));
     }
 
-    public ResponseEntity<DataDto<Boolean>>verify(String email){
-        return  null;
+    public ResponseEntity<DataDto<Boolean>> verify(String email) {
+        return null;
     }
 
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
         Optional<AuthUser> user = repository.findById(id);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return new ResponseEntity<>(new DataDto<>(new AppErrorDto(HttpStatus.NOT_FOUND, "user not found")));
         }
         repository.softDelete(id);
@@ -103,14 +108,14 @@ public class AuthUserServiceImpl extends
     @Override
     public ResponseEntity<DataDto<Boolean>> update(UserUpdateDto updateDto) {
         Optional<AuthUser> user = repository.findById(updateDto.getId());
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return new ResponseEntity<>(new DataDto<>(new AppErrorDto(HttpStatus.NOT_FOUND, "user not found")));
         }
         AuthUser authUser = user.get();
         authUser.setPhoneNumber(updateDto.getPhoneNumber());
         authUser.setEmail(updateDto.getEmail());
         authUser.setFullName(updateDto.getFullName());
-        Principal principal = (Principal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Principal principal = (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         authUser.setUpdatedBy(principal.getId());
         repository.save(authUser);
         return new ResponseEntity<>(new DataDto<>(true));
@@ -160,6 +165,9 @@ public class AuthUserServiceImpl extends
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AuthUser user = repository.findByEmail(email);
+        if (Objects.isNull(user)) {
+            throw new BadCredentialsException("Bad credentials");
+        }
         return new CustomUserDetails(user);
     }
 
@@ -196,6 +204,70 @@ public class AuthUserServiceImpl extends
     public ResponseEntity<DataDto<SessionDto>> refreshToken(
             HttpServletRequest request,
             HttpServletResponse response) {
+        Date expiryForRefreshToken = JWTUtils.getExpiryForRefreshToken();
+        Date expiry = JWTUtils.getExpiry();
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = header.substring(7);
+
+        CustomUserDetails user = (CustomUserDetails) verifyToken(token);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        SessionDto sessionDto = getSessionDto(request, response, expiryForRefreshToken, expiry, user);
+        try {
+            new ObjectMapper().writeValue(response.getOutputStream(), new DataDto<>(sessionDto));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
+
+    public SessionDto getSessionDto(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    Date expiryForRefreshToken,
+                                    Date expiry,
+                                    CustomUserDetails user) {
+        String accessToken = JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(expiry)
+                .withIssuer(request.getRequestURL().toString())
+                .withClaim("roles",
+                        user.
+                                getAuthorities().
+                                stream().
+                                map(GrantedAuthority::getAuthority).
+                                collect(Collectors.toList()))
+                .withClaim("id", user.getId())
+                .withClaim("active", user.isEnabled())
+                .withClaim("blocked", user.isBlocked())
+                .sign(JWTUtils.getAlgorithm());
+
+        String refreshToken = JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(expiryForRefreshToken)
+                .withIssuer(request.getRequestURL().toString())
+                .sign(JWTUtils.getAlgorithm());
+
+        SessionDto sessionDto = SessionDto.builder()
+                .accessToken(accessToken)
+                .accessTokenExpiry(expiry.getTime())
+                .refreshToken(refreshToken)
+                .refreshTokenExpiry(expiryForRefreshToken.getTime())
+                .issuedAt(System.currentTimeMillis())
+                .build();
+
+        return sessionDto;
+    }
+
+    private UserDetails verifyToken(String token) {
+        Date expiryForAccessToken = JWTUtils.getExpiry();
+        DecodedJWT decodedJWT = JWTUtils.getVerifier().verify(token);
+        Date expiresAt = decodedJWT.getExpiresAt();
+        if (expiresAt.before(expiryForAccessToken)) {
+            throw new RuntimeException("Time out!");
+            //should be directed to login page
+        }
+        String email = decodedJWT.getSubject();
+        return loadUserByUsername(email);
+    }
+
+
 }

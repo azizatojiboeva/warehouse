@@ -1,6 +1,8 @@
 package uz.pdp.warehouse.exception;
 
+import org.organicdesign.fp.oneOf.Or;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +35,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-//    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<DataDto<AppError>> handleAccessDenied(AccessDeniedException e, WebRequest webRequest) {
         return new ResponseEntity <>(
                 new DataDto<>(AppErrorDto.builder()
@@ -54,6 +55,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                 .path(webRequest.getContextPath())
                                 .build()));
     }
+
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<DataDto<AppErrorDto>> handleBadCredentials(BadCredentialsException e, WebRequest webRequest) {
+        return new ResponseEntity<>(
+                new DataDto(
+                        AppErrorDto.builder()
+                                .message(e.getMessage())
+                                .status(HttpStatus.NOT_FOUND)
+                                .path(webRequest.getContextPath())
+                                .build()));
+    }
+
 
 
     @ExceptionHandler({IllegalArgumentException.class})
