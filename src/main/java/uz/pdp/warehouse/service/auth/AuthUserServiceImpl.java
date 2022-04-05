@@ -220,7 +220,7 @@ public class AuthUserServiceImpl extends
         return null;
     }
 
-    public SessionDto getSessionDto(HttpServletRequest request,
+    public static SessionDto getSessionDto(HttpServletRequest request,
                                     HttpServletResponse response,
                                     Date expiryForRefreshToken,
                                     Date expiry,
@@ -261,7 +261,7 @@ public class AuthUserServiceImpl extends
         Date expiryForAccessToken = JWTUtils.getExpiry();
         DecodedJWT decodedJWT = JWTUtils.getVerifier().verify(token);
         Date expiresAt = decodedJWT.getExpiresAt();
-        if (expiresAt.before(expiryForAccessToken)) {
+        if (expiresAt.after(expiryForAccessToken)) {
             throw new RuntimeException("Time out!");
             //should be directed to login page
         }

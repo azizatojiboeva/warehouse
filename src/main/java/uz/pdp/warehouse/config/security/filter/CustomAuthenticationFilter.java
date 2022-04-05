@@ -66,7 +66,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Date expiryForAccessToken = JWTUtils.getExpiry();
         Date expiryForRefreshToken = JWTUtils.getExpiryForRefreshToken();
 
-        AuthUserServiceImpl.getAccessToken(request, response, expiryForRefreshToken, expiryForAccessToken, user);
+        SessionDto sessionDto = AuthUserServiceImpl.getSessionDto(request, response, expiryForRefreshToken, expiryForAccessToken, user);
         new ObjectMapper().writeValue(response.getOutputStream(), new DataDto<>(sessionDto));
     }
 
