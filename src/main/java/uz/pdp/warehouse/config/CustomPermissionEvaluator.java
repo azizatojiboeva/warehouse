@@ -41,9 +41,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         result = permissionsCodeById.stream().
                 anyMatch(permissionByCode -> permissionByCode
                         .equalsIgnoreCase(String.valueOf(permission)));
-//        if (!result) {
-//            throw new AccessDeniedException("Permission denied due to unauthorized access!");
-//        }
+        if (!result) {
+            throw new AccessDeniedException("Permission denied due to unauthorized access!");
+        }
         return false;
     }
 
