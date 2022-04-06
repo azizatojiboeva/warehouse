@@ -41,4 +41,5 @@ public class AppErrorDto {
         this.status=scUnauthorized;
         this.message=message;
     }
+
 }

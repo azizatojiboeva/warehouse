@@ -32,7 +32,7 @@ public class OrganizationServiceImpl extends AbstractService<OrganizationReposit
     }
 
     @Override
-    public ResponseEntity<DataDto<Long>> create(OrganizationCreateDto createDto) {
+    public ResponseEntity<DataDto<Long>> create(OrganizationCreateDto createDto)  {
         validator.validOnCreate(createDto);
         Organization organization = mapper.fromCreateDto(createDto);
         Organization newOrganization = repository.save(organization);

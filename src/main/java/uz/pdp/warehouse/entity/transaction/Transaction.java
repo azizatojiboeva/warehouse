@@ -25,4 +25,5 @@ public class Transaction extends Auditable {
     @OneToMany(mappedBy = "transactionId", fetch = FetchType.LAZY)
     private List<TransactionElement> elements;
 
+
 }

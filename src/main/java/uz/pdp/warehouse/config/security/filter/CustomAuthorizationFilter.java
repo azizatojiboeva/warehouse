@@ -52,7 +52,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     error.put("error_message", exception.getMessage());
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                     new ObjectMapper().writeValue(response.getOutputStream(), error);
-//                    throw new InvalidTokenException(exception.getMessage());
+//                    throw anew InvalidTokenException(exception.getMessage());
                 }
             } else {
                 filterChain.doFilter(request, response);

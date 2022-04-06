@@ -20,6 +20,7 @@ import uz.pdp.warehouse.dto.auth.SessionDto;
 import uz.pdp.warehouse.entity.base.CustomUserDetails;
 import uz.pdp.warehouse.response.AppErrorDto;
 import uz.pdp.warehouse.response.DataDto;
+import uz.pdp.warehouse.service.auth.AuthUserServiceImpl;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -65,36 +66,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Date expiryForAccessToken = JWTUtils.getExpiry();
         Date expiryForRefreshToken = JWTUtils.getExpiryForRefreshToken();
 
-        String accessToken = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(expiryForAccessToken)
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles",
-                        user.
-                                getAuthorities().
-                                stream().
-                                map(GrantedAuthority::getAuthority).
-                                collect(Collectors.toList()))
-                .withClaim("id", user.getId())
-                .withClaim("active", user.isEnabled())
-                .withClaim("blocked", user.isBlocked())
-                .sign(JWTUtils.getAlgorithm());
-
-        String refreshToken = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(expiryForRefreshToken)
-                .withIssuer(request.getRequestURL().toString())
-                .sign(JWTUtils.getAlgorithm());
-
-        SessionDto sessionDto = SessionDto.builder()
-                .accessToken(accessToken)
-                .accessTokenExpiry(expiryForAccessToken.getTime())
-                .refreshToken(refreshToken)
-                .refreshTokenExpiry(expiryForRefreshToken.getTime())
-                .issuedAt(System.currentTimeMillis())
-                .build();
-
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        SessionDto sessionDto = AuthUserServiceImpl.getSessionDto(request, response, expiryForRefreshToken, expiryForAccessToken, user);
         new ObjectMapper().writeValue(response.getOutputStream(), new DataDto<>(sessionDto));
     }
 
