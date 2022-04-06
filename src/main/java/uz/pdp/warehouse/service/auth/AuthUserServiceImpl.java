@@ -9,8 +9,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -58,6 +60,9 @@ public class AuthUserServiceImpl extends
     private final ObjectMapper objectMapper;
 
 
+    @Autowired
+    JavaMailSender mailSender;
+
     protected AuthUserServiceImpl(
             AuthUserMapper mapper,
             AuthUserValidator validator,
@@ -70,6 +75,8 @@ public class AuthUserServiceImpl extends
 
     }
 
+
+
     @Override
     public ResponseEntity<DataDto<Long>> create(UserCreateDto createDto) {
         // TODO: 3/18/2022 there should be validation, checks if this user already exist in database, have all required fields
@@ -77,7 +84,7 @@ public class AuthUserServiceImpl extends
         AuthUser authUser = mapper.fromCreateDto(createDto);
         authUser.setPassword(passwordEncoder.passwordEncoder().encode(createDto.getPassword()));
         authUser.setRole(user);
-        Principal principal = (Principal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Principal principal = (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         authUser.setCreatedBy(principal.getId());
         authUser.setVerificationCode(RandomString.make(64));
         authUser.setActive(false);
@@ -86,14 +93,14 @@ public class AuthUserServiceImpl extends
         return new ResponseEntity<>(new DataDto<>(authUser.getId()));
     }
 
-    public ResponseEntity<DataDto<Boolean>>verify(String email){
-        return  null;
+    public ResponseEntity<DataDto<Boolean>> verify(String email) {
+        return null;
     }
 
     @Override
     public ResponseEntity<DataDto<Void>> delete(Long id) {
         Optional<AuthUser> user = repository.findById(id);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return new ResponseEntity<>(new DataDto<>(new AppErrorDto(HttpStatus.NOT_FOUND, "user not found")));
         }
         repository.softDelete(id);
@@ -103,14 +110,14 @@ public class AuthUserServiceImpl extends
     @Override
     public ResponseEntity<DataDto<Boolean>> update(UserUpdateDto updateDto) {
         Optional<AuthUser> user = repository.findById(updateDto.getId());
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return new ResponseEntity<>(new DataDto<>(new AppErrorDto(HttpStatus.NOT_FOUND, "user not found")));
         }
         AuthUser authUser = user.get();
         authUser.setPhoneNumber(updateDto.getPhoneNumber());
         authUser.setEmail(updateDto.getEmail());
         authUser.setFullName(updateDto.getFullName());
-        Principal principal = (Principal)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Principal principal = (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         authUser.setUpdatedBy(principal.getId());
         repository.save(authUser);
         return new ResponseEntity<>(new DataDto<>(true));
@@ -197,5 +204,25 @@ public class AuthUserServiceImpl extends
             HttpServletRequest request,
             HttpServletResponse response) {
         return null;
+    }
+
+    public void addUser(Long id) {
+
+        ResponseEntity<DataDto<UserDto>> authUser = get(id);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setFrom("warehouse@gmail.com");
+        message.setTo(authUser.getData().getData().getEmail());
+//        message.setTo("azizatojiboyeva24@gmail.com");
+//        message.setTo("nodirbekjuraev02@gmail.com");
+        message.setSubject("Assalomu alaykum ");
+        message.setText("http://localhost:8080/api/auth/accept/"+authUser.getData().getData().getVerificationCode());
+
+        mailSender.send(message);
+    }
+
+    public void accept(String code) {
+
     }
 }

@@ -40,7 +40,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/login/**",
                         "/token",
                         "/swagger-ui/**",
-                        "/api-docs/**")
+                        "/api-docs/**",
+                         "/api/auth/accept/**")
                 .permitAll()
         .anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
