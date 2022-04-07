@@ -32,8 +32,8 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/refresh-token", method = RequestMethod.GET)
-    public ResponseEntity<DataDto<SessionDto>> getToken(HttpServletRequest request, HttpServletResponse response) {
-        return service.refreshToken(request, response);
+    public ResponseEntity<DataDto<SessionDto>> getToken(String refreshToken,HttpServletRequest request, HttpServletResponse response) {
+        return service.refreshToken(refreshToken, request, response);
     }
 
 

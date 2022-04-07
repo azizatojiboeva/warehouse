@@ -12,7 +12,6 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
@@ -207,22 +206,41 @@ public class AuthUserServiceImpl extends
     }
 
     public ResponseEntity<DataDto<SessionDto>> refreshToken(
+            String refreshToken,
             HttpServletRequest request,
             HttpServletResponse response) {
-        Date expiryForRefreshToken = JWTUtils.getExpiryForRefreshToken();
         Date expiry = JWTUtils.getExpiry();
-        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String token = header.substring(7);
+        CustomUserDetails user = (CustomUserDetails) verifyToken(refreshToken);
+        String accessToken = JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(expiry)
+                .withIssuer(request.getRequestURL().toString())
+                .withClaim("roles",
+                        user.
+                                getAuthorities().
+                                stream().
+                                map(GrantedAuthority::getAuthority).
+                                collect(Collectors.toList()))
+                .withClaim("id", user.getId())
+                .withClaim("active", user.isEnabled())
+                .withClaim("blocked", user.isBlocked())
+                .sign(JWTUtils.getAlgorithm());
 
-        CustomUserDetails user = (CustomUserDetails) verifyToken(token);
+        SessionDto sessionDto = SessionDto.builder()
+                .accessToken(accessToken)
+                .accessTokenExpiry(expiry.getTime())
+                .refreshToken(refreshToken)
+                .refreshTokenExpiry(JWTUtils.getExpiryForRefreshToken().getTime())
+                .issuedAt(System.currentTimeMillis())
+                .build();
+
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        SessionDto sessionDto = getSessionDto(request, response, expiryForRefreshToken, expiry, user);
         try {
             new ObjectMapper().writeValue(response.getOutputStream(), new DataDto<>(sessionDto));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ResponseEntity<>(new DataDto<>(sessionDto), HttpStatus.OK);
     }
 
     public ResponseEntity<DataDto<Void>> addUser(Long id) {
@@ -248,51 +266,9 @@ public class AuthUserServiceImpl extends
         return new ResponseEntity<>(new DataDto<>(true));
     }
 
-    public static SessionDto getSessionDto(HttpServletRequest request,
-                                           HttpServletResponse response,
-                                           Date expiryForRefreshToken,
-                                           Date expiry,
-                                           CustomUserDetails user) {
-        String accessToken = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(expiry)
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles",
-                        user.
-                                getAuthorities().
-                                stream().
-                                map(GrantedAuthority::getAuthority).
-                                collect(Collectors.toList()))
-                .withClaim("id", user.getId())
-                .withClaim("active", user.isEnabled())
-                .withClaim("blocked", user.isBlocked())
-                .sign(JWTUtils.getAlgorithm());
-
-        String refreshToken = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(expiryForRefreshToken)
-                .withIssuer(request.getRequestURL().toString())
-                .sign(JWTUtils.getAlgorithm());
-
-        SessionDto sessionDto = SessionDto.builder()
-                .accessToken(accessToken)
-                .accessTokenExpiry(expiry.getTime())
-                .refreshToken(refreshToken)
-                .refreshTokenExpiry(expiryForRefreshToken.getTime())
-                .issuedAt(System.currentTimeMillis())
-                .build();
-
-        return sessionDto;
-    }
 
     private UserDetails verifyToken(String token) {
-        Date expiryForAccessToken = JWTUtils.getExpiry();
         DecodedJWT decodedJWT = JWTUtils.getVerifier().verify(token);
-        Date expiresAt = decodedJWT.getExpiresAt();
-        if (expiresAt.after(expiryForAccessToken)) {
-            throw new RuntimeException("Time out!");
-            //should be directed to login page
-        }
         String email = decodedJWT.getSubject();
         return loadUserByUsername(email);
     }
