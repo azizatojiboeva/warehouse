@@ -9,6 +9,7 @@ import uz.pdp.warehouse.repository.base.AbstractRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author Aziza Tojiboyeva
@@ -38,5 +39,9 @@ public interface AuthUserRepository extends AbstractRepository<AuthUser, Long> {
 
    @Query(value = " select distinct ap.code from public.users u join public.auth_role_permissions arp on arp.auth_role_id = ?2  and u.id = ?1 join public.auth_permission ap on arp.permissions_id = ap.id", nativeQuery = true)
    List<String> findPermissionsCodeById(@Param("id") Long id, @Param("role_id") Long role_id);
+
+
+   Optional<AuthUser> findByAAndVerificationCodeAndDeletedFalse(String code);
+
 
 }

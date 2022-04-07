@@ -11,9 +11,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -63,6 +66,9 @@ public class AuthUserServiceImpl extends
     private final ObjectMapper objectMapper;
 
 
+    @Autowired
+    JavaMailSender mailSender;
+
     protected AuthUserServiceImpl(
             AuthUserMapper mapper,
             AuthUserValidator validator,
@@ -84,7 +90,7 @@ public class AuthUserServiceImpl extends
         authUser.setRole(user);
         Principal principal = (Principal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         authUser.setCreatedBy(principal.getId());
-        authUser.setVerificationCode(RandomString.make(64));
+        authUser.setVerificationCode(null);
         authUser.setActive(false);
         authUser.setOrganizationId(-1L);
         repository.save(authUser);
@@ -173,7 +179,6 @@ public class AuthUserServiceImpl extends
 
     public ResponseEntity<DataDto<SessionDto>> getToken(LoginDto dto) {
         try {
-
             HttpClient client = HttpClientBuilder.create().build();
             HttpPost httppost = new HttpPost("http://localhost:8080" + "/api/login");
             byte[] bytes = objectMapper.writeValueAsBytes(dto);
@@ -220,11 +225,34 @@ public class AuthUserServiceImpl extends
         return null;
     }
 
+    public ResponseEntity<DataDto<Void>> addUser(Long id) {
+        AuthUser user = repository.findByIdAndDeletedFalse(id);
+        user.setVerificationCode(RandomString.make(64));
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("warehouse@gmail.com");
+        message.setTo(user.getEmail());
+        message.setSubject("Assalomu alaykum ");
+        message.setText("http://localhost:8080/api/auth/accept/" + user.getVerificationCode());
+        mailSender.send(message);
+        repository.save(user);
+        return new ResponseEntity<>(new DataDto<>(null));
+    }
+
+    public ResponseEntity<DataDto<Boolean>> accept(String code) {
+
+        validator.validateCode(code);
+        Optional<AuthUser> user = repository.findByAAndVerificationCodeAndDeletedFalse(code);
+        validator.validateUser(user);
+        user.get().setActive(true); // todo to`g`irlash kerak
+        repository.save(user.get());
+        return new ResponseEntity<>(new DataDto<>(true));
+    }
+
     public static SessionDto getSessionDto(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    Date expiryForRefreshToken,
-                                    Date expiry,
-                                    CustomUserDetails user) {
+                                           HttpServletResponse response,
+                                           Date expiryForRefreshToken,
+                                           Date expiry,
+                                           CustomUserDetails user) {
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(expiry)

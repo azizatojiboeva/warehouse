@@ -4,7 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.warehouse.controller.base.AbstractController;
-import uz.pdp.warehouse.dto.auth.*;
+import uz.pdp.warehouse.dto.auth.PasswordDto;
+import uz.pdp.warehouse.dto.auth.UserCreateDto;
+import uz.pdp.warehouse.dto.auth.UserDto;
+import uz.pdp.warehouse.dto.auth.UserUpdateDto;
 import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.auth.AuthUserServiceImpl;
@@ -16,7 +19,8 @@ import java.util.List;
 /**
  * @Author Aziza Tojiboyeva
  */
-@RestController(value = "/api/auth/*")
+@RestController
+@RequestMapping(value = "/api/auth")
 public class AuthUserController extends AbstractController<AuthUserServiceImpl> {
 
 
@@ -47,7 +51,7 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
         return response;
     }
 
-    @PutMapping("resetPassword/{id}")
+    @PutMapping("/resetPassword/{id}")
     public ResponseEntity<DataDto<Void>> resetPassword(@PathVariable(name = "id") long id,
                                                        @RequestBody PasswordDto dto) {
         dto.setId(id);
@@ -55,19 +59,23 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
         return new ResponseEntity<>(new DataDto<>(null), HttpStatus.OK);
     }
 
+
     @PostMapping("")
     @PreAuthorize(value = "hasPermission('hasAccess', 'USER_CREATE')")
     public ResponseEntity<DataDto<Long>> create(@Valid @RequestBody UserCreateDto createDto) {
         return service.create(createDto);
     }
 
+
     @RequestMapping(value = "/verify", method = RequestMethod.GET)
-    public ResponseEntity<DataDto<Boolean>> verifyUser(@RequestParam(name = "email") String email){
-       return service.verify(email);
+    public ResponseEntity<DataDto<Boolean>> verifyUser(@RequestParam(name = "email") String email) {
+        return service.verify(email);
     }
 
     @RequestMapping(value = "/sendVerification", method = RequestMethod.GET)
     public ResponseEntity<DataDto<Boolean>> sendVerificationCode(@RequestParam(name = "email") String email,
+                                                                 @RequestParam(name = "url") String url) {
+
                                                                  @RequestParam(name = "url") String url){
         return null;
     }
@@ -78,11 +86,18 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
         return new ResponseEntity<>(new DataDto<>(null), HttpStatus.OK);
     }
 
+    //-----------------------  new method  ---------------------------//
 
+    @GetMapping(value = "/add/{id}")
+    public ResponseEntity<DataDto<Void>> addUser(@PathVariable(name = "id") Long id) {
+        return service.addUser(id);
+    }
 
+    @GetMapping(value = "/accept/{code}")
+    public ResponseEntity<DataDto<Boolean>> accept(@PathVariable(name = "code") String code) {
 
-
-
+        return service.accept(code);
+    }
 
 
 }
