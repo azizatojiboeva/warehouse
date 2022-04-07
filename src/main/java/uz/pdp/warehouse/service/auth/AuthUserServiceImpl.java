@@ -241,7 +241,7 @@ public class AuthUserServiceImpl extends
     public ResponseEntity<DataDto<Boolean>> accept(String code) {
 
         validator.validateCode(code);
-        Optional<AuthUser> user = repository.findByAAndVerificationCodeAndDeletedFalse(code);
+        Optional<AuthUser> user = repository.findByVerificationCodeAndDeletedFalse(code);
         validator.validateUser(user);
         user.get().setActive(true); // todo to`g`irlash kerak
         repository.save(user.get());

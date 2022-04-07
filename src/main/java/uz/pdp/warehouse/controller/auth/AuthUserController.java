@@ -12,7 +12,6 @@ import uz.pdp.warehouse.response.DataDto;
 import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.auth.AuthUserServiceImpl;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -75,12 +74,10 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
     @RequestMapping(value = "/sendVerification", method = RequestMethod.GET)
     public ResponseEntity<DataDto<Boolean>> sendVerificationCode(@RequestParam(name = "email") String email,
                                                                  @RequestParam(name = "url") String url) {
-
-                                                                 @RequestParam(name = "url") String url){
         return null;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<DataDto<Void>> delete(@PathVariable(name = "id") Long id) {
         service.delete(id);
         return new ResponseEntity<>(new DataDto<>(null), HttpStatus.OK);

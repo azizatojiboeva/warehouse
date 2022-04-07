@@ -21,7 +21,6 @@ public class UserDto extends GenericDto {
 
     private String verificationCode;
 
-    public UserDto(Long id, String fullName, String password, String email, String phoneNumber, AuthRole authRole, String verificationCode) {
     public UserDto(Long id, String fullName, String email, String phoneNumber, AuthRole authRole) {
         super(id);
         this.fullName = fullName;

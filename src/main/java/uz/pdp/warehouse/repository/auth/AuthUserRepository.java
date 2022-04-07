@@ -19,29 +19,28 @@ public interface AuthUserRepository extends AbstractRepository<AuthUser, Long> {
 
     @Transactional
     @Modifying
-    @Query("update AuthUser a set a.deleted = true where a.id =:id")
+    @Query(value = "update users us  set is_deleted = true where us.id =:id", nativeQuery = true)
     void softDelete(@Param("id") Long id);
 
 
     @Transactional
     @Modifying
-    @Query("update AuthUser a set a.password =:newPassword where a.id =:id")
-    void resetPassword( @Param("newPassword")String newPassword,@Param("id") Long id);
+    @Query(value = "update users us  set password =:newPassword where us.id =:id", nativeQuery = true)
+    void resetPassword(@Param("newPassword") String newPassword, @Param("id") Long id);
 
-    @Query("from AuthUser where phoneNumber =:number")
+    @Query(value = "select * from users us where us.phone_number =:number", nativeQuery = true)
     AuthUser findByPhoneNumber(@Param("number") String number);
 
 
-    @Query("from AuthUser a where a.email =:email")
-    AuthUser findByEmail(@Param("email")String email);
+    @Query(value = " select  * from users us   where us.email =:email", nativeQuery = true)
+    AuthUser findByEmail(@Param("email") String email);
 
     AuthUser findByIdAndDeletedFalse(Long id);
 
-   @Query(value = " select distinct ap.code from public.users u join public.auth_role_permissions arp on arp.auth_role_id = ?2  and u.id = ?1 join public.auth_permission ap on arp.permissions_id = ap.id", nativeQuery = true)
-   List<String> findPermissionsCodeById(@Param("id") Long id, @Param("role_id") Long role_id);
+    @Query(value = " select distinct ap.code from public.users u join public.auth_role_permissions arp on arp.auth_role_id = ?2  and u.id = ?1 join public.auth_permission ap on arp.permissions_id = ap.id", nativeQuery = true)
+    List<String> findPermissionsCodeById(@Param("id") Long id, @Param("role_id") Long role_id);
 
 
-   Optional<AuthUser> findByAAndVerificationCodeAndDeletedFalse(String code);
-
+    Optional<AuthUser> findByVerificationCodeAndDeletedFalse(String code);
 
 }
