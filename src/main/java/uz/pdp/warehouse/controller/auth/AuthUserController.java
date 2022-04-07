@@ -84,14 +84,13 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
 
     @GetMapping(value = "/add/{id}")
     public ResponseEntity<DataDto<Void>> addUser(@PathVariable(name = "id") Long id) {
-        service.addUser(id);
-        return null;
+        return service.addUser(id);
     }
 
     @GetMapping(value = "/accept/{code}")
-    public ResponseEntity<DataDto<String>> accept(@PathVariable(name = "code") String code) {
-        service.accept(code);
-        return null;
+    public ResponseEntity<DataDto<Boolean>> accept(@PathVariable(name = "code") String code) {
+
+        return service.accept(code);
     }
 
 
