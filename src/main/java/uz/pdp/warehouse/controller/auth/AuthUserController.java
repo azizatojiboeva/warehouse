@@ -10,6 +10,7 @@ import uz.pdp.warehouse.response.ResponseEntity;
 import uz.pdp.warehouse.service.auth.AuthUserServiceImpl;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -36,7 +37,9 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
         return entity;
     }
 
+
     @PutMapping("/{id}")
+    @PreAuthorize(value = "hasPermission('hasAccess', 'USER_UPDATE')")
     public ResponseEntity<DataDto<Boolean>> update(@PathVariable(name = "id") Long id,
                                                    @RequestBody UserUpdateDto dto) {
         dto.setId(id);
@@ -53,7 +56,8 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
     }
 
     @PostMapping("")
-    public ResponseEntity<DataDto<Long>> create(@RequestBody UserCreateDto createDto) {
+    @PreAuthorize(value = "hasPermission('hasAccess', 'USER_CREATE')")
+    public ResponseEntity<DataDto<Long>> create(@Valid @RequestBody UserCreateDto createDto) {
         return service.create(createDto);
     }
 
@@ -65,7 +69,6 @@ public class AuthUserController extends AbstractController<AuthUserServiceImpl> 
     @RequestMapping(value = "/sendVerification", method = RequestMethod.GET)
     public ResponseEntity<DataDto<Boolean>> sendVerificationCode(@RequestParam(name = "email") String email,
                                                                  @RequestParam(name = "url") String url){
-
         return null;
     }
 

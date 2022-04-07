@@ -44,15 +44,17 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         if (!result) {
             throw new AccessDeniedException("Permission denied due to unauthorized access!");
         }
-        return false;
+        return result;
     }
 
 
     @Override
-    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
+    public boolean hasPermission(Authentication authentication,
+                                 Serializable targetId,
+                                 String targetType,
+                                 Object permission) {
         return false;
     }
-
 
 
 }

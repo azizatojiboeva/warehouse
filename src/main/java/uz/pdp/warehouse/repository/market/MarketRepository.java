@@ -15,6 +15,9 @@ import java.util.Optional;
  */
 @Repository
 public interface MarketRepository extends AbstractRepository<Market, Long> {
+
+
+
     @Query(value = " update public.market d set is_deleted = true , name = name||?2  where  d.id = ?1", nativeQuery = true)
     boolean deleteSoft(Long id, String toString);
 
