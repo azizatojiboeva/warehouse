@@ -17,15 +17,15 @@ import javax.servlet.http.HttpServletResponse;
  * @Author Aziza Tojiboyeva
  */
 @RestController
-public class HomeController {
+public class TokenController {
 
     private final AuthUserServiceImpl service;
 
-    public HomeController(AuthUserServiceImpl service) {
+    public TokenController(AuthUserServiceImpl service) {
         this.service = service;
     }
 
-    @RequestMapping(value = "/token", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/login", method = RequestMethod.POST)
     public ResponseEntity<DataDto<SessionDto>> getToken(@RequestBody LoginDto dto) {
         ResponseEntity<DataDto<SessionDto>> token = service.getToken(dto);
         return token;

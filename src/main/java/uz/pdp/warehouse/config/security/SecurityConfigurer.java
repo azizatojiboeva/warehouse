@@ -37,7 +37,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.exceptionHandling().authenticationEntryPoint(userAuthenticationEntryPoint);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers("/api/login/**",
+                .antMatchers("/api/login",
                         "/token",
                         "/swagger-ui/**",
                         "/api-docs/**",
