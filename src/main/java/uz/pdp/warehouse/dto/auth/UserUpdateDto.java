@@ -21,6 +21,7 @@ public class UserUpdateDto extends GenericDto {
     @Unique(type = UniqueType.EMAIL, message = "This email is already taken")
     private String email;
 
+
     @Unique(type = UniqueType.PHONENUMBER, message = "Phone number is repeated!")
     private String phoneNumber;
 
