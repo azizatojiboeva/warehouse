@@ -25,6 +25,7 @@ public class UserUpdateDto extends GenericDto {
     private String phoneNumber;
 
 
+
     @Builder(builderMethodName = "childBuilder")
     public UserUpdateDto(Long id, String fullName, String email, String phoneNumber) {
         super(id);
